@@ -9,21 +9,36 @@ importers:
   .:
     dependencies:
       '@dao-xyz/borsh':
-        specifier: ^5.2.3
+        specifier: ^5
         version: 5.2.3
+      '@peerbit/any-store':
+        specifier: ^2.1.0
+        version: 2.1.0
+      '@peerbit/any-store-opfs':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@peerbit/document':
         specifier: ^7
         version: 7.0.4
+      '@peerbit/indexer-sqlite3':
+        specifier: ^1.0.2
+        version: 1.0.2
       '@peerbit/program':
-        specifier: ^5.0.0
+        specifier: ^5
         version: 5.0.0
+      opfs:
+        specifier: link:@peerbit/any-store/opfs
+        version: link:@peerbit/any-store/opfs
       peerbit:
         specifier: ^4
         version: 4.0.10(react-native@0.74.3(@babel/core@7.24.9)(@babel/preset-env@7.24.8(@babel/core@7.24.9))(react@18.2.0))
       uuid:
-        specifier: ^10.0.0
+        specifier: ^10
         version: 10.0.0
     devDependencies:
+      '@peerbit/vite':
+        specifier: ^1.0.1
+        version: 1.0.1(@types/node@20.14.11)(terser@5.31.3)
       '@sveltejs/adapter-static':
         specifier: ^3.0.2
         version: 3.0.2(@sveltejs/kit@2.5.18(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.195)(vite@5.3.4(@types/node@20.14.11)(terser@5.31.3)))(svelte@5.0.0-next.195)(vite@5.3.4(@types/node@20.14.11)(terser@5.31.3)))
@@ -1268,6 +1283,10 @@ packages:
   '@peerbit/time@2.0.7':
     resolution: {integrity: sha512-cWiK0Ib8Va/RVUhn6d8Fzbm6A8978iAZYiHGBvyOzEA7rT6tfnkOFk/nCzjP4VfUyPfrZ7HUJ2+gQdLWxW5vxQ==}
 
+  '@peerbit/vite@1.0.1':
+    resolution: {integrity: sha512-Ik0c/4dhPVwsFoYWQQg1LNlrMQfd+IhxyU80XtTUaeRlRtuBUqoFacBpUYVGCS04zwvuqzJWIk6lOq1R9Wn0/A==}
+    engines: {node: '>=16.15.1'}
+
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
@@ -2268,6 +2287,10 @@ packages:
   fs-constants@1.0.0:
     resolution: {integrity: sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow==}
 
+  fs-extra@11.2.0:
+    resolution: {integrity: sha512-PmDi3uwK5nFuXh7XDTlVnS17xJS7vW36is2+w3xcv8SVxiB4NyATf4ctkVY5bkSjX0Y4nbvZCq1/EjtEyr9ktw==}
+    engines: {node: '>=14.14'}
+
   fs-extra@8.1.0:
     resolution: {integrity: sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==}
     engines: {node: '>=6 <7 || >=8'}
@@ -2655,6 +2678,9 @@ packages:
 
   jsonfile@4.0.0:
     resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
+
+  jsonfile@6.1.0:
+    resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
   kind-of@6.0.3:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
@@ -3871,6 +3897,10 @@ packages:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
     engines: {node: '>= 4.0.0'}
 
+  universalify@2.0.1:
+    resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
+    engines: {node: '>= 10.0.0'}
+
   unpipe@1.0.0:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}
     engines: {node: '>= 0.8'}
@@ -3899,6 +3929,12 @@ packages:
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
+
+  vite-plugin-static-copy@1.0.6:
+    resolution: {integrity: sha512-3uSvsMwDVFZRitqoWHj0t4137Kz7UynnJeq1EZlRW7e25h2068fyIZX4ORCCOAkfp1FklGxJNVJBkBOD+PZIew==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    peerDependencies:
+      vite: ^5.0.0
 
   vite@5.3.4:
     resolution: {integrity: sha512-Cw+7zL3ZG9/NZBB8C+8QbQZmR54GwqIz+WMI4b3JgdYJvX+ny9AjJXqkGQlDXSXRP9rP0B4tbciRMOVEKulVOA==}
@@ -5899,6 +5935,19 @@ snapshots:
 
   '@peerbit/time@2.0.7': {}
 
+  '@peerbit/vite@1.0.1(@types/node@20.14.11)(terser@5.31.3)':
+    dependencies:
+      vite: 5.3.4(@types/node@20.14.11)(terser@5.31.3)
+      vite-plugin-static-copy: 1.0.6(vite@5.3.4(@types/node@20.14.11)(terser@5.31.3))
+    transitivePeerDependencies:
+      - '@types/node'
+      - less
+      - lightningcss
+      - sass
+      - stylus
+      - sugarss
+      - terser
+
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
@@ -7095,6 +7144,12 @@ snapshots:
 
   fs-constants@1.0.0: {}
 
+  fs-extra@11.2.0:
+    dependencies:
+      graceful-fs: 4.2.11
+      jsonfile: 6.1.0
+      universalify: 2.0.1
+
   fs-extra@8.1.0:
     dependencies:
       graceful-fs: 4.2.11
@@ -7511,6 +7566,12 @@ snapshots:
   json5@2.2.3: {}
 
   jsonfile@4.0.0:
+    optionalDependencies:
+      graceful-fs: 4.2.11
+
+  jsonfile@6.1.0:
+    dependencies:
+      universalify: 2.0.1
     optionalDependencies:
       graceful-fs: 4.2.11
 
@@ -8891,6 +8952,8 @@ snapshots:
 
   universalify@0.1.2: {}
 
+  universalify@2.0.1: {}
+
   unpipe@1.0.0: {}
 
   update-browserslist-db@1.1.0(browserslist@4.23.2):
@@ -8908,6 +8971,14 @@ snapshots:
   uuid@9.0.1: {}
 
   vary@1.1.2: {}
+
+  vite-plugin-static-copy@1.0.6(vite@5.3.4(@types/node@20.14.11)(terser@5.31.3)):
+    dependencies:
+      chokidar: 3.6.0
+      fast-glob: 3.3.2
+      fs-extra: 11.2.0
+      picocolors: 1.0.1
+      vite: 5.3.4(@types/node@20.14.11)(terser@5.31.3)
 
   vite@5.3.4(@types/node@20.14.11)(terser@5.31.3):
     dependencies:
