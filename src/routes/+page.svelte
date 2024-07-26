@@ -1,40 +1,14 @@
 <script lang="ts">
-
-    import { Peerbit } from "peerbit";
-    import { PostsDB, Post } from '$lib/database'
-    import { SearchRequest } from "@peerbit/document";
-
-    async function init() {
-        var peer = await Peerbit.create();
-
-        const store = await peer.open(new PostsDB());
-
-        await store.posts.put(new Post("hello world"));
-        await store.posts.put(new Post("goodbye world"));
-
-        const responses: Post[] = await store.posts.index.search(
-            new SearchRequest({
-                query: []
-            }),
-            {
-                local: true,
-                remote: true
-            }
-        );
-
-        return responses;
-    }
-
+	import { boards } from "$lib/boards";
 </script>
 
-{#await init()}
-    <p>loading...</p>
-{:then x}
-    {#each x as post}
-        <p>{post.id}</p>
-        <p>{post.message}</p>
-    {/each}
-{/await}
-
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<div class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
+	<div class="text-center">
+        <h1 class="text-4xl font-bold mb-8">Boards</h1>
+        <ul class="space-y-4 text-xl">
+            {#each boards as { slug, name }}
+                <li><a href="/boards/{slug}" class="hover:text-blue-500">{name}</a></li>
+            {/each}
+        </ul>
+    </div>    
+</div>
