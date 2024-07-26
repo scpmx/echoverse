@@ -22,7 +22,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
         {#each threads as thread}
-            <a href="/{$page.params["board"]}/{thread.address}" class="bg-white shadow-md rounded-lg overflow-hidden">
+            <a href="/boards/{$page.params["board"]}/{thread.address}" class="bg-white shadow-md rounded-lg overflow-hidden">
                 <img src="{thread.image}" alt="" class="w-full h-48 object-cover">
                 <div class="p-4">
                     <h3 class="text-xl font-semibold">{thread.title}</h3>

@@ -1,6 +1,6 @@
 import { field, variant } from "@dao-xyz/borsh";
 import { Program } from "@peerbit/program";
-import { Documents, SearchRequest } from "@peerbit/document";
+import { Documents } from "@peerbit/document";
 import { v4 as uuid } from "uuid";
 
 @variant(0)
