@@ -35,11 +35,13 @@
 		"@dao-xyz/borsh": "^5",
 		"@peerbit/any-store": "^2.1.0",
 		"@peerbit/any-store-opfs": "^1.0.0",
+		"@peerbit/crypto": "^2.3.0",
 		"@peerbit/document": "^7",
 		"@peerbit/indexer-sqlite3": "^1.0.2",
 		"@peerbit/program": "^5",
 		"opfs": "link:@peerbit/any-store/opfs",
 		"peerbit": "^4",
+		"uint8arrays": "^5.1.0",
 		"uuid": "^10"
 	}
 }

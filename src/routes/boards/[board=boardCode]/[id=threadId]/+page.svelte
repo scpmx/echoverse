@@ -1,6 +1,28 @@
 <script>
+	import { getPeer } from "$lib/client";
+	import { Post, PostsDB } from "$lib/database";
+	import { SearchRequest } from "@peerbit/document";
+
+
+async function init() {
+        var peer = await getPeer();
+
+        var posts = await peer.open(new PostsDB());
+
+        await posts.posts.put(new Post("Hello World"));
+
+        var ps = await posts.posts.index.search(new SearchRequest());
+
+        console.log(ps);
+    }
 
 </script>
+
+
+<button onclick="{() => init()}">
+    Click Me
+</button>
+
 <div class="bg-gray-100 text-gray-800">
 	<div class="container mx-auto p-4">
 		<div class="bg-white shadow-md rounded-lg p-4 mb-4">
