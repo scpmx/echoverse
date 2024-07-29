@@ -3,6 +3,8 @@
     import { Board, IndexableThread, Thread } from "$lib/database";
 	import { SearchRequest } from "@peerbit/document";
     import { page } from "$app/stores";
+	import { onDestroy } from "svelte";
+	import NewThread from "./NewThread.svelte";
 
     type Props = {
         board: Board
@@ -20,16 +22,11 @@
         threads.push(...x.detail.added)
     })
 
-    async function createThread() {
-        var idk = await new Thread("id", "https://i.imgur.com/W33X57A.jpeg", "my title", "my message").calculateAddress();
-        await board.threads.put(new IndexableThread("id", "https://i.imgur.com/W33X57A.jpeg", "my title", "my message", idk))
-    }
+    onDestroy(() => {
+        board.close();
+    });
 
 </script>
-
-<button onclick="{() => createThread()}">
-    Create Thread
-</button>
 
 <div class="bg-gray-100 h-full">
 
@@ -49,3 +46,6 @@
       </div>
     </div>
 </div>
+
+
+<NewThread {board}/>
