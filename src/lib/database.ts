@@ -86,6 +86,39 @@ export class Thread extends Program {
     }
 }
 
+@variant(0)
+export class IndexableThread {
+
+    @field({ type: "string" })
+    id: string;
+
+    @field({ type: "string" })
+    imageUrl: string;
+
+    @field({ type: "string" })
+    title: string;
+
+    @field({ type: "string"})
+    message: string;
+
+    @field({ type: "string" })
+    address: string;
+
+    constructor(
+        id: string,
+        imageUrl: string,
+        title: string,
+        message: string,
+        address: string
+    ) {
+        this.id = id;
+        this.imageUrl = imageUrl;
+        this.title = title;
+        this.message = message;
+        this.address = address;
+    }
+}
+
 @variant("board")
 export class Board extends Program {
 
@@ -93,7 +126,7 @@ export class Board extends Program {
     shortName: string;
 
     @field({ type: Documents })
-    threads: Documents<Thread>;
+    threads: Documents<IndexableThread>;
 
     constructor(
         shortName: string
@@ -101,7 +134,7 @@ export class Board extends Program {
         super();
         this.shortName = shortName;
         this.threads =
-            new Documents<Thread>({
+            new Documents<IndexableThread>({
                 id: sha256Sync(
                     concat([
                         new TextEncoder().encode("board"),
@@ -113,7 +146,7 @@ export class Board extends Program {
 
     async open(): Promise<void> {
         await this.threads.open({
-            type: Thread
+            type: IndexableThread
         });
     }
 }
