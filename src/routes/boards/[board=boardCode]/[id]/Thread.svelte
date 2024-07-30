@@ -1,6 +1,7 @@
 <script lang="ts">
 
 	import { Reply as ReplyDB, Thread } from "$lib/database";
+	import { onDestroy } from "svelte";
 	import InitialPost from "./InitialPost.svelte";
 	import NewReply from "./NewReply.svelte";
 	import Reply from "./Reply.svelte";
@@ -20,6 +21,10 @@
 
     thread.replies.events.addEventListener("change", x => {
         replies.push(...x.detail.added);
+    });
+
+    onDestroy(() => {
+        thread.close();
     });
 
 </script>
