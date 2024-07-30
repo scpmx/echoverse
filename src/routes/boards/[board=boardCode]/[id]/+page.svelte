@@ -20,4 +20,6 @@
     <p>Loading</p>
 {:then thread}
     <Thread {thread} />
+{:catch error}
+    <p style="color: red">{error.message}</p>
 {/await}
