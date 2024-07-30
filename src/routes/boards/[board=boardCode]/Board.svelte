@@ -48,4 +48,4 @@
 </div>
 
 
-<NewThread {board}/>
+<NewThread { board } />

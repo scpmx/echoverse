@@ -5,8 +5,6 @@
 	import { Board as DBBoard } from "$lib/database";
 	import Board from "./Board.svelte";
 
-    import { onDestroy } from "svelte";
-
     async function getBoard() {
 
         var peer = await getPeer();
@@ -15,8 +13,6 @@
 
         return board;
     }
-
-
 
 </script>
 
