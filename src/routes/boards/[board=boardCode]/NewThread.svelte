@@ -21,6 +21,11 @@
 
 		var id = uuid();
 		var date = new Date().toUTCString();
+
+		if (name == "") {
+			name = "Anonymous"
+		}
+
 		await board.threads.put(new Thread(id, date, title, imageUrl, message, name));
 		await goto("/boards/" + $page.params.board + "/" + id.toString());
 
@@ -62,7 +67,7 @@
 					id="name"
 					bind:value={name}
 					class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-					placeholder="Your name (optional)"
+					placeholder="Name"
 				/>
 			</div>
 			<div class="mb-4">
@@ -72,7 +77,7 @@
 					id="title"
 					bind:value={title}
 					class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-					placeholder="Thread title"
+					placeholder="Title"
 				/>
 			</div>
 			<div class="mb-4">
@@ -82,7 +87,7 @@
 					id="imageUrl"
 					bind:value={imageUrl}
 					class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-					placeholder="URL of the image (optional)"
+					placeholder="Image URL"
 				/>
 			</div>
 			<div class="mb-4">

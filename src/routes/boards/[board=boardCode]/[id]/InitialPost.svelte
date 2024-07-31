@@ -18,7 +18,7 @@
                 <span class="text-gray-400 text-sm mx-2">|</span>
                 <span class="text-gray-500 text-sm">{thread.date}</span>
                 <span class="text-gray-400 text-sm mx-2">|</span>
-                <span class="text-gray-500 text-sm">{thread.id}</span>
+                <span class="text-gray-500 text-sm">{thread.id.slice(0, 4) + thread.id.slice(-4)}</span>
             </div>
             <p class="text-gray-700">
                 {thread.message}

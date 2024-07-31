@@ -27,7 +27,7 @@
                     <span class="text-gray-400 text-sm mx-2">|</span>
                     <span class="text-gray-500 text-sm">{reply.date}</span>
                     <span class="text-gray-400 text-sm mx-2">|</span>
-                    <span class="text-gray-500 text-sm">{reply.id}</span>
+                    <span class="text-gray-500 text-sm">{reply.id.slice(0, 4) + reply.id.slice(-4)}</span>
                 </div>
                 <p class="text-gray-700">
                     {reply.message}
