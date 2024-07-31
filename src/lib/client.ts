@@ -1,6 +1,5 @@
 import { Peerbit } from "peerbit";
 import { Board } from "./database";
-import { multiaddr } from '@multiformats/multiaddr'
 
 let peer : Peerbit | null = null
 let boards = new Map<string, Board>()
