@@ -1,5 +1,6 @@
 import { Peerbit } from "peerbit";
 import { Board } from "./database";
+import { multiaddr } from '@multiformats/multiaddr'
 
 let peer : Peerbit | null = null
 let boards = new Map<string, Board>()
@@ -7,6 +8,7 @@ let boards = new Map<string, Board>()
 export async function getPeer() : Promise<Peerbit> {
     if (peer == null) {
         peer = await Peerbit.create();
+        await peer.bootstrap();
     }
     return peer;
 }
