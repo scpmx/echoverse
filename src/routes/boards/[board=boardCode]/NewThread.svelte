@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { IndexableThread, Thread, type Board } from '$lib/database';
+	import { goto } from '$app/navigation';
+	import { Thread, type Board } from '$lib/database';
+	import { v4 as uuid } from 'uuid';
+	import { page } from '$app/stores';
 
 	let showModal = $state(false);
 
@@ -15,9 +18,11 @@
 	let { board }: Props = $props();
 
 	async function createThread() {
-		var thread = new Thread(name, title, imageUrl, message);
-		var address = await thread.calculateAddress();
-		await board.threads.put(new IndexableThread('TeeHee', imageUrl, title, message, address));
+
+		var id = uuid();
+		var date = new Date().toUTCString();
+		await board.threads.put(new Thread(id, date, title, imageUrl, message, name));
+		await goto("/boards/" + $page.params.board + "/" + id.toString());
 
 		showModal = false;
 		name = '';

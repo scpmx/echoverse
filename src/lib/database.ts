@@ -11,8 +11,8 @@ export class Reply {
     @field({ type: "string" })
     id: string;
 
-    @field({ type: "string" })
-    name: string;
+    @field({ type: option("string") })
+    name?: string;
 
     @field({ type: "string" })
     date: string;
@@ -24,9 +24,9 @@ export class Reply {
     imageUrl?: string;
 
     constructor(
-        name: string,
         date: string,
         message: string,
+        name?: string,
         imageUrl?: string
     ) {
         this.id = uuid();
@@ -44,6 +44,12 @@ export class Thread extends Program {
     @field({ type: "string" })
     id: string;
 
+    @field({ type: option("string") })
+    name?: string;
+
+    @field({ type: "string" })
+    date: string;
+
     @field({ type: "string" })
     title: string;
 
@@ -58,12 +64,16 @@ export class Thread extends Program {
 
     constructor(
         id: string,
+        date: string,
         title: string,
         imageUrl: string,
-        message: string
+        message: string,
+        name?: string,
     ) {
         super();
         this.id = id;
+        this.date = date;
+        this.name = name;
         this.title = title;
         this.imageUrl = imageUrl;
         this.message = message;
@@ -81,7 +91,7 @@ export class Thread extends Program {
 
     async open(): Promise<void> {
         await this.replies.open({
-            type: Reply
+            type: Reply,
         });
     }
 }
@@ -91,6 +101,12 @@ export class IndexableThread {
 
     @field({ type: "string" })
     id: string;
+
+    @field({ type: option("string") })
+    name?: string;
+
+    @field({ type: "string" })
+    date: string;
 
     @field({ type: "string" })
     imageUrl: string;
@@ -106,12 +122,16 @@ export class IndexableThread {
 
     constructor(
         id: string,
+        date: string,
         imageUrl: string,
         title: string,
         message: string,
-        address: string
+        address: string,
+        name?: string,
     ) {
         this.id = id;
+        this.date = date;
+        this.name = name;
         this.imageUrl = imageUrl;
         this.title = title;
         this.message = message;
@@ -126,7 +146,7 @@ export class Board extends Program {
     shortName: string;
 
     @field({ type: Documents })
-    threads: Documents<IndexableThread>;
+    threads: Documents<Thread, IndexableThread>;
 
     constructor(
         shortName: string
@@ -134,7 +154,7 @@ export class Board extends Program {
         super();
         this.shortName = shortName;
         this.threads =
-            new Documents<IndexableThread>({
+            new Documents<Thread, IndexableThread>({
                 id: sha256Sync(
                     concat([
                         new TextEncoder().encode("board"),
@@ -146,7 +166,25 @@ export class Board extends Program {
 
     async open(): Promise<void> {
         await this.threads.open({
-            type: IndexableThread
+            type: Thread,
+            index: {
+                idProperty: "id",
+                type: IndexableThread,
+                transform: async (thread, _) => {
+                    return new IndexableThread(
+                        thread.id,
+                        thread.date,
+                        thread.imageUrl, 
+                        thread.title, 
+                        thread.message, 
+                        await thread.calculateAddress(),
+                        thread.name
+                    )
+                }
+            },
+            canOpen: (thread) => {
+                return true;
+            }
         });
     }
 }

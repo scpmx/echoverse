@@ -1,7 +1,6 @@
 <script lang="ts">
 
 	import { Reply as ReplyDB, Thread } from "$lib/database";
-	import { onDestroy } from "svelte";
 	import InitialPost from "./InitialPost.svelte";
 	import NewReply from "./NewReply.svelte";
 	import Reply from "./Reply.svelte";
@@ -23,23 +22,19 @@
         replies.push(...x.detail.added);
     });
 
-    onDestroy(() => {
-        thread.close();
-    });
-
 </script>
 
 <div class="bg-gray-100 text-gray-800">
     <div class="container mx-auto p-4">
 
-        <InitialPost {thread} />
+        <InitialPost { thread } />
 
         {#each replies as reply}
-            <Reply {reply} />
+            <Reply { reply } />
         {/each}
 
     </div>
 
-    <NewReply {thread} />
+    <NewReply { thread } />
 
 </div>    

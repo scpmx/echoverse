@@ -1,15 +1,21 @@
 <script lang="ts">
 
-	import { getPeer } from "$lib/client";
+	import { getBoard, getPeer } from "$lib/client";
     import { page } from "$app/stores";
-	import { Thread as DBThread } from "$lib/database";
+	import { Board, Thread as DBThread } from "$lib/database";
     import Thread from './Thread.svelte'
+	import { SearchRequest, StringMatch } from "@peerbit/document";
+	import ThreadNotFound from "./ThreadNotFound.svelte";
 
-    async function getThread() {
+    async function getThread() : Promise<DBThread | undefined> {
 
-        var peer = await getPeer();
+        var board = await getBoard($page.params.board);
 
-        var thread = await peer.open(new DBThread($page.params.id, "My Thread", "https://i.imgur.com/W33X57A.jpeg", "My message"));
+        var [thread] = await board.threads.index.search(new SearchRequest({
+            query: [
+                    new StringMatch({ key: "id", value: $page.params.id }),
+                ],
+        }));
 
         return thread;
     }
@@ -19,7 +25,13 @@
 {#await getThread()}
     <p>Loading</p>
 {:then thread}
-    <Thread {thread} />
+    {#if thread}
+        <Thread { thread } />
+    {:else}
+        <ThreadNotFound />
+    {/if}
 {:catch error}
+    <p style="color: red;">thread:</p>
     <p style="color: red">{error.message}</p>
+    <p>{console.log(error)}</p>
 {/await}

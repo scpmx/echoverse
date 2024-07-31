@@ -14,11 +14,11 @@
         <div>
             <h1 class="text-2xl font-bold mb-2">{thread.title}</h1>
             <div class="flex items-center mb-2">
-                <span class="text-gray-500 text-sm">Anonymous</span>
+                <span class="text-gray-500 text-sm">{thread.name}</span>
                 <span class="text-gray-400 text-sm mx-2">|</span>
-                <span class="text-gray-500 text-sm">Date</span>
+                <span class="text-gray-500 text-sm">{thread.date}</span>
                 <span class="text-gray-400 text-sm mx-2">|</span>
-                <span class="text-gray-500 text-sm">id</span>
+                <span class="text-gray-500 text-sm">{thread.id}</span>
             </div>
             <p class="text-gray-700">
                 {thread.message}

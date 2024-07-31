@@ -1,25 +1,24 @@
 <script lang="ts">
 
     import { page } from "$app/stores";
-	import { getPeer } from "$lib/client";
-	import { Board as DBBoard } from "$lib/database";
+	import { getBoard } from "$lib/client";
 	import Board from "./Board.svelte";
 
-    async function getBoard() {
+    async function init() {
 
-        var peer = await getPeer();
-
-        var board = await peer.open(new DBBoard($page.params.board));
+        var board = await getBoard($page.params.board);
 
         return board;
     }
 
 </script>
 
-{#await getBoard()}
+{#await init()}
     <p>Loading...</p>
 {:then board} 
     <Board {board} />
 {:catch error}
+    <p style="color: red;">board:</p>
 	<p style="color: red">{error.message}</p>
+    {console.log(error)}
 {/await}
