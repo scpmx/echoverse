@@ -1,9 +1,9 @@
-import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
-import options from '@peerbit/vite'
+import { sveltekit } from '@sveltejs/kit/vite'
+import { defineConfig } from 'vite'
+import peerbit from '@peerbit/vite'
 
 export default defineConfig({
-	plugins: [ sveltekit(), options() ],
+	plugins: [ sveltekit(), peerbit() ],
 	optimizeDeps: {
 		esbuildOptions: {
 		  target: 'esnext'
@@ -12,4 +12,4 @@ export default defineConfig({
 	build: {
 		target: 'esnext'
 	}
-});
+})
