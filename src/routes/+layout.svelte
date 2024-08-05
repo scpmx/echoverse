@@ -1,9 +1,8 @@
 <script>
   import "../app.css";
+  import Nav from "$lib/components/nav.svelte";
 </script>
 
-<div class="navbar bg-base-900">
-  <a href="#/" class="btn btn-ghost text-xl">SOLOCHAN</a>
-</div>
+<Nav />
 
 <slot></slot>
