@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { ActiveBoards, ActiveThreadsPerBoard } from '$lib/types';
+    import type { WatchedBoards } from '$lib/types';
     import CollapsibleThreadList from './CollapsibleThreadList.svelte';
 
-    let sampleData: ActiveBoards = {
+    let sampleData: WatchedBoards = {
         boards: [
             { board: "Business and Finance"
             , threads:

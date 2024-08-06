@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { ActiveThreadsPerBoard } from "$lib/types";
+  import type { WatchedThreads } from "$lib/types";
 
   type Props = {
-    activeThreads: ActiveThreadsPerBoard;
+    activeThreads: WatchedThreads;
   };
 
   let { activeThreads }: Props = $props();

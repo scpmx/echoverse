@@ -10,11 +10,11 @@ export type Thread = {
   hasUnreadMessages: boolean
 };
 
-export type ActiveThreadsPerBoard = {
+export type WatchedThreads = {
   board: string;
   threads: Thread[];
 };
 
-export type ActiveBoards = {
-  boards: ActiveThreadsPerBoard[];
+export type WatchedBoards = {
+  boards: WatchedThreads[];
 };
