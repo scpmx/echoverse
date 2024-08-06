@@ -1,5 +1,5 @@
 <script lang="ts">
-
+  import ReplyInput from "./ReplyInput.svelte";
 
   const conversation = [
     {
@@ -112,6 +112,11 @@
   ];
 </script>
 
+<!-- TODO: Populate with real thread title -->
+<svelte:head>
+    <title>This is the thread title</title>
+</svelte:head>
+
 {#each conversation as chat}
   {#if chat.fromSelf}
     <div class="chat chat-end">
@@ -131,3 +136,8 @@
     </div>
   {/if}
 {/each}
+
+<!-- Padding -->
+<div class="h-32 w-full"></div>
+
+<ReplyInput />

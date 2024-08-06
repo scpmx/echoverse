@@ -18,6 +18,7 @@
     <div id="threads" class="p-4 rounded-b">
       <ul>
         {#each activeThreads.threads as thread}
+          <!-- TODO: Display thread image -->
           <li class="mb-2 ml-4">{thread.name}</li>
         {/each}
       </ul>
