@@ -1,18 +1,6 @@
 <script lang="ts">
-
-    type Thread = {
-        // id: string,
-        name: string
-    }
-
-    type ActiveThreadsPerBoard = {
-        board: string,
-        threads: Thread[]
-    }
-
-    type ActiveBoards = {
-        boards: ActiveThreadsPerBoard[]
-    }
+    import type { ActiveBoards, ActiveThreadsPerBoard } from '$lib/types';
+    import CollapsibleThreadList from './CollapsibleThreadList.svelte';
 
     let sampleData: ActiveBoards = {
         boards: [
@@ -66,22 +54,7 @@
 
 </script>
 
-{#snippet ThreadsSnippet(activeThreads: ActiveThreadsPerBoard)}
-    <div class="max-w-md mx-auto">
-        <div class="p-4 rounded-t cursor-pointer">
-            <h2 class="text-xl font-bold">{activeThreads.board}</h2>
-        </div>
-        <div id="threads" class="p-4 rounded-b">
-            <ul>
-                {#each activeThreads.threads as thread}
-                    <li class="mb-2 ml-4">{thread.name}</li>
-                {/each}
-            </ul>
-        </div>
-    </div>
-{/snippet}
-
 
 {#each sampleData.boards as board}
-    {@render ThreadsSnippet(board)}
+    <CollapsibleThreadList activeThreads={board} />
 {/each}

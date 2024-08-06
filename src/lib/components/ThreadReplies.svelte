@@ -1,9 +1,5 @@
 <script lang="ts">
-  type Chat = {
-    // id: string,
-    message: string;
-    fromSelf: boolean;
-  };
+
 
   const conversation = [
     {
