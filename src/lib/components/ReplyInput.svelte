@@ -1,25 +1,11 @@
 <script lang="ts">
 </script>
 
-<div class="fixed bottom-0 w-auto p-4">
-  <div class="flex items-center">
-    <textarea placeholder="Write your message" class="flex-grow p-3 bg-base-200"
-    ></textarea>
-    <button class="btn btn-primary">
-      <svg
-        class="w-6 h-6"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M14 5l7 7m0 0l-7 7m7-7H3"
-        ></path>
-      </svg>
-    </button>
-  </div>
+<div class="flex items-center p-4 rounded-lg shadow">
+  <textarea class="flex-1 resize-nonep-2 rounded-lg border bg-base-200 focus:outline-none focus:ring-2" placeholder="Type your reply..."></textarea>
+  <button class="btn btn-accent m-4">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+    </svg>
+  </button>
 </div>

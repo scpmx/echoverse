@@ -114,30 +114,30 @@
 
 <!-- TODO: Populate with real thread title -->
 <svelte:head>
-    <title>This is the thread title</title>
+  <title>This is the thread title</title>
 </svelte:head>
 
-{#each conversation as chat}
-  {#if chat.fromSelf}
-    <div class="chat chat-end">
-      <div class="chat-bubble">
-        <div class="max-w-72">
-          {chat.message}
+<div class="flex flex-col h-full">
+  <div class="flex-grow overflow-y-scroll">
+    {#each conversation as chat}
+      {#if chat.fromSelf}
+        <div class="chat chat-end">
+          <div class="chat-bubble">
+            <div class="max-w-72">
+              {chat.message}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  {:else}
-    <div class="chat chat-start">
-      <div class="chat-bubble">
-        <div class="max-w-72">
-          {chat.message}
+      {:else}
+        <div class="chat chat-start">
+          <div class="chat-bubble">
+            <div class="max-w-72">
+              {chat.message}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  {/if}
-{/each}
-
-<!-- Padding -->
-<div class="h-32 w-full"></div>
-
-<ReplyInput />
+      {/if}
+    {/each}
+  </div>
+  <ReplyInput />
+</div>
