@@ -3,7 +3,11 @@
   import YourThreadsHeader from "$lib/components/YourThreadsHeader.svelte";
 </script>
 
-<div class="w-96 flex flex-col">
+<!-- 
+  Hide sidebar on small screens. Will have to add a button or something
+  to show the sidebar on small screens
+ -->
+<div class="w-96 flex-col hidden md:flex">
   <YourThreadsHeader />
   <div class="flex-1 overflow-y-auto p-4 border-r border-base-300">
     <YourThreads />
