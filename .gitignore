@@ -1,5 +1,4 @@
 node_modules
-public
 
 # Output
 .output
@@ -20,3 +19,5 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+.DS_Store
