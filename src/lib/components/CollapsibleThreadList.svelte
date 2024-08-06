@@ -17,9 +17,13 @@
   {#if !collapsed}
     <div id="threads" class="p-4 rounded-b">
       <ul>
+        <!-- TODO: Display thread image -->
         {#each activeThreads.threads as thread}
-          <!-- TODO: Display thread image -->
-          <li class="mb-2 ml-4">{thread.name}</li>
+          {#if thread.hasUnreadMessages}
+            <li class="font-bold mb-2 ml-4">{thread.name}*</li>
+          {:else}
+            <li class="font-light mb-2 ml-4">{thread.name}</li>
+          {/if} 
         {/each}
       </ul>
     </div>

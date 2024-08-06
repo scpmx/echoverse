@@ -7,6 +7,7 @@ export type Chat = {
 export type Thread = {
   // id: string,
   name: string;
+  hasUnreadMessages: boolean
 };
 
 export type ActiveThreadsPerBoard = {
