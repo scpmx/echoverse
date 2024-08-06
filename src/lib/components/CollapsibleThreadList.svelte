@@ -16,16 +16,13 @@
   </button>
   {#if !collapsed}
     <div id="threads" class="p-4 rounded-b">
-      <ul>
-        <!-- TODO: Display thread image -->
-        {#each activeThreads.threads as thread}
-          {#if thread.hasUnreadMessages}
-            <li class="font-bold mb-2 ml-4">{thread.name}*</li>
-          {:else}
-            <li class="font-light mb-2 ml-4">{thread.name}</li>
-          {/if} 
-        {/each}
-      </ul>
+      {#each activeThreads.threads as thread}
+        {#if thread.hasUnreadMessages}
+          <button class="btn btn-link font-bold">{thread.name}</button>
+        {:else}
+          <button class="btn btn-link font-light">{thread.name}</button>
+        {/if}
+      {/each}
     </div>
   {/if}
 </div>
