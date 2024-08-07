@@ -1,22 +1,22 @@
 <script lang="ts">
-  import type { WatchedThreads } from "$lib/types";
+  import type { PinnedBoard } from "$lib/types";
 
   type Props = {
-    activeThreads: WatchedThreads;
+    board: PinnedBoard;
   };
 
-  let { activeThreads }: Props = $props();
+  let { board }: Props = $props();
 
   let collapsed = $state(false);
 </script>
 
 <div class="max-w-md mx-auto">
   <button class="btn btn-ghost" onclick="{() => collapsed = !collapsed}">
-    <h2 class="text-xl font-bold">{activeThreads.board}</h2>
+    <h2 class="text-xl font-bold">{board.name}</h2>
   </button>
   {#if !collapsed}
     <div id="threads" class="p-4 rounded-b">
-      {#each activeThreads.threads as thread}
+      {#each board.threads as thread}
         {#if thread.hasUnreadMessages}
           <button class="btn btn-link font-bold">{thread.name}</button>
         {:else}
