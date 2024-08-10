@@ -29,6 +29,9 @@ importers:
       peerbit:
         specifier: ^4.0.12
         version: 4.0.12(react-native@0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.25.3(@babel/core@7.25.2))(react@18.2.0))
+      uint8arrays:
+        specifier: ^5.1.0
+        version: 5.1.0
       uuid:
         specifier: ^10.0.0
         version: 10.0.0
