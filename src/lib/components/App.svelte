@@ -1,11 +1,15 @@
 <script lang="ts">
   import CollapsibleThreadList from "$lib/components/CollapsibleThreadList.svelte";
-  import { messages, pinnedBoards } from "$lib/state.svelte";
+  import { pinnedBoards } from "$lib/state.svelte";
   import type { Peerbit } from "peerbit";
+  import CatalogView from "./CatalogView.svelte";
+  import ChatView from "./ChatView.svelte";
+  import BoardsView from "./BoardsView.svelte";
+  import { navigation } from "$lib/navigation.svelte";
 
   type Props = {
-    peer: Peerbit
-  }
+    peer: Peerbit;
+  };
 
   let { peer }: Props = $props();
 
@@ -21,50 +25,22 @@
         <CollapsibleThreadList {board} />
       {/each}
       <div class="p-4">
-        <button class="btn btn-ghost">Explore more...</button>
+        <button class="btn btn-ghost" onclick={() => navigation.navigate({ route: "catalogs" })}>
+          Explore more...
+        </button>
+        <button class="btn btn-ghost" onclick={() => {}}>
+            Go Back
+        </button>
       </div>
     </div>
   </div>
   <div class="flex-1 flex flex-col">
-    <div class="p-4 bg-base-200 border-b border-base-300">
-      <h1 class="text-xl font-bold">This is the title</h1>
-    </div>
-    <main class="relative flex-1 overflow-y-auto">
-      <div class="flex flex-col h-full">
-        <div class="flex-grow overflow-y-scroll">
-          {#each messages as chat}
-            <div class="chat {chat.fromSelf ? 'chat-end' : 'chat-start'}">
-              <div class="chat-bubble">
-                <div class="max-w-96">
-                  {chat.message}
-                </div>
-              </div>
-            </div>
-          {/each}
-        </div>
-        <div class="flex items-center p-4 rounded-lg shadow">
-          <textarea
-            class="flex-1 resize-nonep-2 rounded-lg border focus:outline-none focus:ring-2"
-            placeholder="Type your reply..."
-          ></textarea>
-          <button class="btn btn-accent m-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 10l7-7m0 0l7 7m-7-7v18"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </main>
+    {#if navigation.current.route == "chat"}
+      <ChatView id={navigation.current.id} />
+    {:else if navigation.current.route == "catalog"}
+      <CatalogView ticker={navigation.current.ticker} />
+    {:else if navigation.current.route == "catalogs"}
+      <BoardsView />
+    {/if}
   </div>
 </div>

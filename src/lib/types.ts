@@ -7,7 +7,8 @@ export type Chat = {
 export type Thread = {
   // id: string,
   name: string;
-  hasUnreadMessages: boolean
+  hasUnreadMessages: boolean,
+  chat: Chat[]
 };
 
 export type PinnedBoard = {

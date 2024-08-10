@@ -137,15 +137,20 @@ export class IndexableChat {
 export class Topic extends Program {
 
     @field({ type: "string" })
+    name: string;
+
+    @field({ type: "string" })
     ticker: string;
 
     @field({ type: Documents })
     threads: Documents<Chat, IndexableChat>;
 
     constructor(
+        name: string,
         ticker: string
     ) {
         super();
+        this.name = name;
         this.ticker = ticker;
         this.threads =
             new Documents<Chat, IndexableChat>({
