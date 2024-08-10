@@ -1,0 +1,27 @@
+<script lang="ts">
+  import { navigation } from "$lib/navigation.svelte";
+  import { pinnedBoards } from "$lib/state.svelte";
+  import CollapsibleThreadList from "./CollapsibleThreadList.svelte";
+</script>
+
+<div class="p-4 bg-base-200 border-b border-base-300">
+  <h2 class="text-xl font-bold">Your Threads</h2>
+</div>
+<div class="flex-1 overflow-y-auto p-4 border-r border-base-300">
+  {#if pinnedBoards.length > 0}
+    {#each pinnedBoards as board}
+      <CollapsibleThreadList {board} />
+    {/each}
+  {:else}
+    <h3 class="p-2 text-xl font-bold">No pinned threads</h3>
+  {/if}
+
+  <div class="p-4">
+    <button
+      class="btn btn-ghost"
+      onclick={() => navigation.navigate({ route: "catalogs" })}
+    >
+      Explore more...
+    </button>
+  </div>
+</div>
