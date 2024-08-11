@@ -1,11 +1,35 @@
 <script lang="ts">
+  import { Chat, Topic } from "$lib/database";
   import { navigation } from "$lib/navigation.svelte";
+  import { SearchRequest } from "@peerbit/document";
+  import type { Peerbit } from "peerbit";
+  import { onMount } from "svelte";
+  import NewChat from "./NewChat.svelte";
 
   type Props = {
-    ticker: string;
+    peer: Peerbit,
+    ticker: string
   };
 
-  let { ticker }: Props = $props();
+  let { peer, ticker }: Props = $props();
+
+  let chats = $state<Chat[]>([]);
+
+  onMount(async () => {
+    var db = await peer.open(new Topic(ticker));
+
+    // await db.chats.put(new Chat("this-is-the-id", new Date().toDateString(), "Hello World", "https://i.imgur.com/Neqq1CY.jpeg", "Hello World Content"));
+
+    var ch = await db.chats.index.search(new SearchRequest());
+
+    chats.push(...ch);
+
+    await db.chats.events.addEventListener("change", (evt) => {
+        chats.push(...evt.detail.added);
+    })
+
+
+  });
 </script>
 
 <div class="p-4 bg-base-200 border-b border-base-300">
@@ -15,25 +39,24 @@
   <div
     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4"
   >
-    {#each { length: 30 } as _}
+    {#each chats as chat}
       <div class="card bg-base-100 shadow-xl">
         <figure>
           <img
-            src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-            alt="Shoes"
+            src={chat.imageUrl}
+            alt="Chat"
           />
         </figure>
         <div class="card-body">
-          <h2 class="card-title">Hello world this is a long ass title</h2>
+          <h2 class="card-title">{chat.title}</h2>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium
-            officia fuga at qui deleniti?
+            {chat.content}
           </p>
           <div class="card-actions justify-end">
             <button
               class="btn btn-primary"
               onclick={() =>
-                navigation.navigate({ route: "chat", id: "hello lmao" })}
+                navigation.navigate({ route: "chat", id: chat.id })}
             >
               Read Now
             </button>
@@ -41,5 +64,6 @@
         </div>
       </div>
     {/each}
+    <NewChat />
   </div>
 </main>

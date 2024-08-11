@@ -137,22 +137,17 @@ export class IndexableChat {
 export class Topic extends Program {
 
     @field({ type: "string" })
-    name: string;
-
-    @field({ type: "string" })
     ticker: string;
 
     @field({ type: Documents })
-    threads: Documents<Chat, IndexableChat>;
+    chats: Documents<Chat, IndexableChat>;
 
     constructor(
-        name: string,
         ticker: string
     ) {
         super();
-        this.name = name;
         this.ticker = ticker;
-        this.threads =
+        this.chats =
             new Documents<Chat, IndexableChat>({
                 id: sha256Sync(
                     concat([
@@ -164,7 +159,7 @@ export class Topic extends Program {
     }
 
     async open(): Promise<void> {
-        await this.threads.open({
+        await this.chats.open({
             type: Chat,
             index: {
                 idProperty: "id",

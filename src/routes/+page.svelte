@@ -7,7 +7,10 @@
   import { navigation } from "$lib/navigation.svelte";
 
   async function init() {
-    var peer = Peerbit.create();
+    var peer = await Peerbit.create();
+
+    // await peer.bootstrap();
+
     return peer;
   }
 

@@ -1,0 +1,101 @@
+<script lang="ts">
+
+  // type Props = {
+  //   createChat: (imageUrl: string, title: string, content: string, name: string) => Promise<void>;
+  // };
+
+  // let { createChat }: Props = $props();
+
+  let imageUrl = $state("");
+  let title = $state("");
+  let content = $state("");
+  let name = $state("");
+  let showModal = $state(false);
+
+  async function create() {
+    // await createChat(imageUrl, title, content, name);
+    showModal = false;
+  }
+
+  function openModal() {
+    showModal = true;
+  }
+
+  function closeModal() {
+    showModal = false;
+  }
+</script>
+
+<!-- Button to open the modal -->
+<button class="btn btn-primary" onclick={openModal}>Create New Chat</button>
+
+<!-- Modal -->
+{#if showModal}
+  <div class="modal modal-open">
+    <div class="modal-box">
+      <h2 class="text-xl font-bold mb-4">Create New Chat</h2>
+
+      <!-- Image URL Input -->
+      <div class="form-control mb-4">
+        <label for="image" class="label">
+          <span class="label-text">Image URL</span>
+        </label>
+        <input
+          id="image"
+          type="text"
+          class="input input-bordered"
+          bind:value={imageUrl}
+          placeholder="Enter image URL"
+        />
+      </div>
+
+      <!-- Title Input -->
+      <div class="form-control mb-4">
+        <label for="title" class="label">
+          <span class="label-text">Title</span>
+        </label>
+        <input
+          id="title"
+          type="text"
+          class="input input-bordered"
+          bind:value={title}
+          placeholder="Enter chat title"
+        />
+      </div>
+
+      <!-- Content Input -->
+      <div class="form-control mb-4">
+        <label for="content" class="label">
+          <span class="label-text">Content</span>
+        </label>
+        <textarea
+          id="content"
+          class="textarea textarea-bordered"
+          bind:value={content}
+          placeholder="Enter chat content"
+        ></textarea>
+      </div>
+
+      <!-- Optional Name Input -->
+      <div class="form-control mb-4">
+        <label for="name" class="label">
+          <span class="label-text">Name (Optional)</span>
+        </label>
+        <input
+          id="name"
+          type="text"
+          class="input input-bordered"
+          bind:value={name}
+          placeholder="Enter your name (optional)"
+        />
+      </div>
+
+      <!-- Modal Action Buttons -->
+      <div class="modal-action">
+        <button class="btn" onclick={closeModal}>Cancel</button>
+        <button class="btn btn-primary" onclick={create}>Create Chat</button
+        >
+      </div>
+    </div>
+  </div>
+{/if}

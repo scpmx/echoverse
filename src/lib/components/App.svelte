@@ -7,6 +7,7 @@
   import BoardsView from "./BoardsView.svelte";
   import { navigation } from "$lib/navigation.svelte";
   import Sidebar from "./Sidebar.svelte";
+  import { onMount } from "svelte";
 
   type Props = {
     peer: Peerbit;
@@ -24,7 +25,7 @@
     {#if navigation.current.route == "chat"}
       <ChatView id={navigation.current.id} />
     {:else if navigation.current.route == "catalog"}
-      <CatalogView ticker={navigation.current.ticker} />
+      <CatalogView {peer} ticker={navigation.current.ticker} />
     {:else if navigation.current.route == "boards"}
       <BoardsView />
     {/if}
