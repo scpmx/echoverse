@@ -5,6 +5,7 @@
   import type { Peerbit } from "peerbit";
   import { onMount } from "svelte";
   import NewChatModal from "./NewChatModal.svelte";
+  import { topics } from "$lib/state.svelte";
 
   type Props = {
     peer: Peerbit,
@@ -16,15 +17,23 @@
   let chats = $state<Chat[]>([]);
 
   onMount(async () => {
-    var db = await peer.open(new Topic(ticker));
 
-    // await db.chats.put(new Chat("this-is-the-id", new Date().toDateString(), "Hello World", "https://i.imgur.com/Neqq1CY.jpeg", "Hello World Content"));
+    let topic: Topic;
 
-    var ch = await db.chats.index.search(new SearchRequest());
+    if (topics.has(ticker)) {
+        topic = topics.get(ticker)!;
+    } else {
+        topic = await peer.open(new Topic(ticker));
+        topics.set(ticker, topic);
+    }
+
+    await topic.chats.put(new Chat("this-is-the-id", new Date().toDateString(), "Hello World", "https://i.imgur.com/Neqq1CY.jpeg", "Hello World Content"));
+
+    var ch = await topic.chats.index.search(new SearchRequest());
 
     chats.push(...ch);
 
-    await db.chats.events.addEventListener("change", (evt) => {
+    await topic.chats.events.addEventListener("change", (evt) => {
         chats.push(...evt.detail.added);
     })
 
@@ -56,7 +65,7 @@
             <button
               class="btn btn-primary"
               onclick={() =>
-                navigation.navigate({ route: "chat", id: chat.id })}
+                navigation.navigate({ route: "chat", ticker: ticker, id: chat.id })}
             >
               Read Now
             </button>

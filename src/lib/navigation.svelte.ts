@@ -11,6 +11,7 @@ type Catalog = {
 
 type Chat = {
   route: "chat";
+  ticker: string;
   id: string;
 };
 

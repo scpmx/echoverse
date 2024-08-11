@@ -1,6 +1,9 @@
 import type { Topic } from "./database";
 import type { Chat, PinnedBoard } from "./types";
 
+// Map from ticker to open topics program
+export let topics = new Map<string, Topic>();
+
 
 // let sampleData: PinnedBoard[] = [
 //   {
