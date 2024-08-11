@@ -1,5 +1,5 @@
+import type { Topic } from "./database";
 import type { Chat, PinnedBoard } from "./types";
-import { pushState } from "$app/navigation";
 
 
 // let sampleData: PinnedBoard[] = [

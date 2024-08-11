@@ -1,14 +1,11 @@
 <script lang="ts">
-  import CollapsibleThreadList from "$lib/components/CollapsibleThreadList.svelte";
-  import { pinnedBoards } from "$lib/state.svelte";
   import type { Peerbit } from "peerbit";
   import CatalogView from "./CatalogView.svelte";
   import ChatView from "./ChatView.svelte";
   import BoardsView from "./BoardsView.svelte";
   import { navigation } from "$lib/navigation.svelte";
   import Sidebar from "./Sidebar.svelte";
-  import { onMount } from "svelte";
-
+  
   type Props = {
     peer: Peerbit;
   };

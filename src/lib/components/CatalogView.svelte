@@ -4,7 +4,7 @@
   import { SearchRequest } from "@peerbit/document";
   import type { Peerbit } from "peerbit";
   import { onMount } from "svelte";
-  import NewChat from "./NewChat.svelte";
+  import NewChatModal from "./NewChatModal.svelte";
 
   type Props = {
     peer: Peerbit,
@@ -64,6 +64,6 @@
         </div>
       </div>
     {/each}
-    <NewChat />
+    <NewChatModal />
   </div>
 </main>
