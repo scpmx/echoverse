@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { PinnedBoard } from "$lib/types";
+  import { navigation } from "$lib/navigation.svelte";
+  import type { PinnedBoard } from "$lib/sidebar.svelte";
 
   type Props = {
     board: PinnedBoard;
@@ -11,17 +12,19 @@
 </script>
 
 <div class="max-w-md mx-auto">
-  <button class="btn btn-ghost" onclick="{() => collapsed = !collapsed}">
+  <button class="btn btn-ghost" onclick={() => (collapsed = !collapsed)}>
     <h2 class="text-xl font-bold">{board.name}</h2>
   </button>
   {#if !collapsed}
     <div id="threads" class="p-4 rounded-b">
-      {#each board.threads as thread}
-        {#if thread.hasUnreadMessages}
-          <button class="btn btn-link font-bold">{thread.name}</button>
-        {:else}
-          <button class="btn btn-link font-light">{thread.name}</button>
-        {/if}
+      {#each board.chats as chat}
+        <button
+          onclick={() => navigation.navigate({ route: "chat", ticker: board.ticker, id: chat.id })}
+          class="btn btn-link {chat.hasUnreadMessages
+            ? 'font-bold'
+            : 'font-light'}">
+            {chat.title}
+        </button>
       {/each}
     </div>
   {/if}

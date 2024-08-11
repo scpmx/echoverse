@@ -3,6 +3,7 @@
   import type { ChatRoute } from "$lib/navigation.svelte";
   import { topics } from "$lib/state.svelte";
   import { SearchRequest, StringMatch } from "@peerbit/document";
+  import { sidebarController } from "$lib/sidebar.svelte";
 
   type Props = {
     chatRoute: ChatRoute;
@@ -10,7 +11,6 @@
 
   let { chatRoute }: Props = $props();
 
-  let title = $state("");
   let messages = $state<Message[]>([]);
   let input = $state("");
 
@@ -23,8 +23,6 @@
       })
     );
 
-    title = chat.title;
-
     var ms = await chat.messages.index.search(new SearchRequest());
     messages.push(...ms);
 
@@ -32,19 +30,21 @@
       messages.push(...evt.detail.added);
     });
 
+    sidebarController.add(topic.ticker, topic.ticker, chat.id, chat.title);
+
     return chat;
   }
 </script>
 
 {#await init() then chat}
   <div class="p-4 bg-base-200 border-b border-base-300">
-    <h1 class="text-xl font-bold">{title}</h1>
+    <h1 class="text-xl font-bold">/{chatRoute.ticker}/ {chat.title}</h1>
   </div>
   <main class="relative flex-1 overflow-y-auto">
     <div class="flex flex-col h-full">
       <div class="flex-grow overflow-y-scroll">
         {#each messages as message}
-          <div class="chat {false ? 'chat-end' : 'chat-start'}">
+          <div class="chat {true ? 'chat-end' : 'chat-start'}">
             <div class="chat-bubble">
               <div class="max-w-96">
                 {message.content}
