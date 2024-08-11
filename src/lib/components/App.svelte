@@ -25,7 +25,7 @@
       <ChatView id={navigation.current.id} />
     {:else if navigation.current.route == "catalog"}
       <CatalogView ticker={navigation.current.ticker} />
-    {:else if navigation.current.route == "catalogs"}
+    {:else if navigation.current.route == "boards"}
       <BoardsView />
     {/if}
   </div>

@@ -19,7 +19,7 @@
   <div class="p-4">
     <button
       class="btn btn-ghost"
-      onclick={() => navigation.navigate({ route: "catalogs" })}
+      onclick={() => navigation.navigate({ route: "boards" })}
     >
       Explore more...
     </button>

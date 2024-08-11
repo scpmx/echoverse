@@ -1,23 +1,23 @@
 import { pushState } from "$app/navigation";
 
-type CatalogsRoute = {
-  route: "catalogs";
+type Boards = {
+  route: "boards";
 };
 
-type CatalogRoute = {
+type Catalog = {
   route: "catalog";
   ticker: string;
 };
 
-type ChatRoute = {
+type Chat = {
   route: "chat";
   id: string;
 };
 
-type View = CatalogsRoute | CatalogRoute | ChatRoute;
+type View = Boards | Catalog | Chat;
 
 class Navigation {
-  current = $state<View>({ route: "catalogs" });
+  current = $state<View>({ route: "boards" });
 
   navigate(view: View) {
     let currentRoute = JSON.stringify(this.current);
