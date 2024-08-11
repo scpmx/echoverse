@@ -20,7 +20,7 @@
   </div>
   <div class="flex-1 flex flex-col">
     {#if navigation.current.route == "chat"}
-      <ChatView id={navigation.current.id} />
+      <ChatView chatRoute={navigation.current} />
     {:else if navigation.current.route == "catalog"}
       <CatalogView {peer} ticker={navigation.current.ticker} />
     {:else if navigation.current.route == "boards"}

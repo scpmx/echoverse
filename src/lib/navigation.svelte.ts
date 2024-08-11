@@ -1,21 +1,24 @@
 import { pushState } from "$app/navigation";
 
-type Boards = {
+export type BoardsRoute = {
   route: "boards";
 };
 
-type Catalog = {
+export type CatalogRoute = {
   route: "catalog";
   ticker: string;
 };
 
-type Chat = {
+export type ChatRoute = {
   route: "chat";
   ticker: string;
   id: string;
 };
 
-type View = Boards | Catalog | Chat;
+export type View =
+  | BoardsRoute
+  | CatalogRoute
+  | ChatRoute;
 
 class Navigation {
   current = $state<View>({ route: "boards" });

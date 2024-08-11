@@ -1,6 +1,6 @@
 <script lang="ts">
   import { navigation } from "$lib/navigation.svelte";
-  import { pinnedBoards } from "$lib/state.svelte";
+  import { sidebarController } from "$lib/sidebar.svelte";
   import CollapsibleThreadList from "./CollapsibleThreadList.svelte";
 </script>
 
@@ -8,8 +8,8 @@
   <h2 class="text-xl font-bold">Your Threads</h2>
 </div>
 <div class="flex-1 overflow-y-auto p-4 border-r border-base-300">
-  {#if pinnedBoards.length > 0}
-    {#each pinnedBoards as board}
+  {#if sidebarController.pinnedBoards.length > 0}
+    {#each sidebarController.pinnedBoards as board}
       <CollapsibleThreadList {board} />
     {/each}
   {:else}
