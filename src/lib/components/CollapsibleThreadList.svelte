@@ -16,7 +16,7 @@
     <h2 class="text-xl font-bold">{board.name}</h2>
   </button>
   {#if !collapsed}
-    <div id="threads" class="p-4 rounded-b">
+    <div class="p-4 rounded-b">
       {#each board.chats as chat}
         <button
           onclick={() => navigation.navigate({ route: "chat", ticker: board.ticker, id: chat.id })}
