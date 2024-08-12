@@ -1,6 +1,4 @@
-import type { Peerbit } from "peerbit";
 import type { Chat, Topic } from "./database";
-import type { ChatRoute } from "./navigation.svelte";
 
 // Map from ticker to open topics program
 export let topics = new Map<string, Topic>();

@@ -3,7 +3,7 @@
   import { navigation } from "$lib/navigation.svelte";
   import { SearchRequest } from "@peerbit/document";
   import type { Peerbit } from "peerbit";
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import NewChatModal from "./NewChatModal.svelte";
   import { topics } from "$lib/state.svelte";
 
@@ -17,8 +17,6 @@
   let chats = $state<Chat[]>([]);
 
   onMount(async () => {
-    console.log("on mount");
-
     let topic: Topic;
 
     if (topics.has(ticker)) {
@@ -27,7 +25,7 @@
       topic = await peer.open(new Topic(ticker));
       topics.set(ticker, topic);
     }
-    
+
     var ch = await topic.chats.index.search(new SearchRequest());
 
     chats.push(...ch);
@@ -35,10 +33,6 @@
     await topic.chats.events.addEventListener("change", (evt) => {
       chats.push(...evt.detail.added);
     });
-  });
-
-  onDestroy(() => {
-    console.log("on destroy");
   });
 </script>
 
