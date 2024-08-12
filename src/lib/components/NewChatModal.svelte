@@ -1,11 +1,4 @@
 <script lang="ts">
-
-  // type Props = {
-  //   createChat: (imageUrl: string, title: string, content: string, name: string) => Promise<void>;
-  // };
-
-  // let { createChat }: Props = $props();
-
   let imageUrl = $state("");
   let title = $state("");
   let content = $state("");
@@ -13,7 +6,6 @@
   let showModal = $state(false);
 
   async function create() {
-    // await createChat(imageUrl, title, content, name);
     showModal = false;
   }
 
@@ -34,6 +26,20 @@
   <div class="modal modal-open">
     <div class="modal-box">
       <h2 class="text-xl font-bold mb-4">Create New Chat</h2>
+
+      <!-- Optional Name Input -->
+      <div class="form-control mb-4">
+        <label for="name" class="label">
+          <span class="label-text">Name</span>
+        </label>
+        <input
+          id="name"
+          type="text"
+          class="input input-bordered"
+          bind:value={name}
+          placeholder="Anonymous"
+        />
+      </div>
 
       <!-- Image URL Input -->
       <div class="form-control mb-4">
@@ -76,25 +82,10 @@
         ></textarea>
       </div>
 
-      <!-- Optional Name Input -->
-      <div class="form-control mb-4">
-        <label for="name" class="label">
-          <span class="label-text">Name (Optional)</span>
-        </label>
-        <input
-          id="name"
-          type="text"
-          class="input input-bordered"
-          bind:value={name}
-          placeholder="Enter your name (optional)"
-        />
-      </div>
-
       <!-- Modal Action Buttons -->
       <div class="modal-action">
         <button class="btn" onclick={closeModal}>Cancel</button>
-        <button class="btn btn-primary" onclick={create}>Create Chat</button
-        >
+        <button class="btn btn-primary" onclick={create}>Create Chat</button>
       </div>
     </div>
   </div>
