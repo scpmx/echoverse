@@ -3,13 +3,13 @@
   import { navigation } from "$lib/navigation.svelte";
   import { SearchRequest } from "@peerbit/document";
   import type { Peerbit } from "peerbit";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import NewChatModal from "./NewChatModal.svelte";
   import { topics } from "$lib/state.svelte";
 
   type Props = {
-    peer: Peerbit,
-    ticker: string
+    peer: Peerbit;
+    ticker: string;
   };
 
   let { peer, ticker }: Props = $props();
@@ -17,27 +17,28 @@
   let chats = $state<Chat[]>([]);
 
   onMount(async () => {
+    console.log("on mount");
 
     let topic: Topic;
 
     if (topics.has(ticker)) {
-        topic = topics.get(ticker)!;
+      topic = topics.get(ticker)!;
     } else {
-        topic = await peer.open(new Topic(ticker));
-        topics.set(ticker, topic);
+      topic = await peer.open(new Topic(ticker));
+      topics.set(ticker, topic);
     }
-
-    await topic.chats.put(new Chat("this-is-the-id", new Date().toDateString(), "Hello World", "https://i.imgur.com/Neqq1CY.jpeg", "Hello World Content"));
-
+    
     var ch = await topic.chats.index.search(new SearchRequest());
 
     chats.push(...ch);
 
     await topic.chats.events.addEventListener("change", (evt) => {
-        chats.push(...evt.detail.added);
-    })
+      chats.push(...evt.detail.added);
+    });
+  });
 
-
+  onDestroy(() => {
+    console.log("on destroy");
   });
 </script>
 
@@ -51,10 +52,7 @@
     {#each chats as chat}
       <div class="card bg-base-100 shadow-xl">
         <figure>
-          <img
-            src={chat.imageUrl}
-            alt="Chat"
-          />
+          <img src={chat.imageUrl} alt="Chat" />
         </figure>
         <div class="card-body">
           <h2 class="card-title">{chat.title}</h2>
@@ -65,7 +63,11 @@
             <button
               class="btn btn-primary"
               onclick={() =>
-                navigation.navigate({ route: "chat", ticker: ticker, id: chat.id })}
+                navigation.navigate({
+                  route: "chat",
+                  ticker: ticker,
+                  id: chat.id,
+                })}
             >
               Read Now
             </button>

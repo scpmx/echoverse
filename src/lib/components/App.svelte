@@ -2,7 +2,7 @@
   import type { Peerbit } from "peerbit";
   import CatalogView from "./CatalogView.svelte";
   import ChatView from "./ChatView.svelte";
-  import BoardsView from "./BoardsView.svelte";
+  import TopicsView from "./TopicsView.svelte";
   import { navigation } from "$lib/navigation.svelte";
   import Sidebar from "./Sidebar.svelte";
   
@@ -20,11 +20,11 @@
   </div>
   <div class="flex-1 flex flex-col">
     {#if navigation.current.route == "chat"}
-      <ChatView chatRoute={navigation.current} />
+      <ChatView {peer} chatRoute={navigation.current} />
     {:else if navigation.current.route == "catalog"}
       <CatalogView {peer} ticker={navigation.current.ticker} />
     {:else if navigation.current.route == "boards"}
-      <BoardsView />
+      <TopicsView />
     {/if}
   </div>
 </div>

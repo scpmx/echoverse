@@ -1,42 +1,65 @@
 <script lang="ts">
   import { Chat, Message } from "$lib/database";
   import type { ChatRoute } from "$lib/navigation.svelte";
-  import { topics } from "$lib/state.svelte";
+  import { chats, topics } from "$lib/state.svelte";
   import { SearchRequest, StringMatch } from "@peerbit/document";
   import { sidebarController } from "$lib/sidebar.svelte";
-
+  import type { Peerbit } from "peerbit";
+  import { getTopicByTicker } from "$lib/topics";
+  
   type Props = {
+    peer: Peerbit;
     chatRoute: ChatRoute;
   };
 
-  let { chatRoute }: Props = $props();
+  let { peer, chatRoute }: Props = $props();
 
   let messages = $state<Message[]>([]);
   let input = $state("");
 
   async function init(): Promise<Chat> {
     var topic = topics.get(chatRoute.ticker)!;
+    var chat = chats.get(chatRoute.id);
 
-    var [chat] = await topic.chats.index.search(
-      new SearchRequest({
-        query: [new StringMatch({ key: "id", value: chatRoute.id })],
-      })
-    );
+    if (!chat) {
+
+      var [query] = await topic.chats.index.search(
+        new SearchRequest({
+          query: [new StringMatch({ key: "id", value: chatRoute.id })],
+        })
+      );
+
+      chat = query;
+
+      if (chat.closed) {
+        console.log("opening chat");
+        chat = await peer.open(chat);
+        chats.set(chatRoute.id, chat);
+      }
+    }
+    else {
+      console.log("found chat in chats");
+    }
 
     var ms = await chat.messages.index.search(new SearchRequest());
+
     messages.push(...ms);
 
     await chat.messages.events.addEventListener("change", (evt) => {
       messages.push(...evt.detail.added);
     });
 
-    sidebarController.add(topic.ticker, topic.ticker, chat.id, chat.title);
+    var boardName = getTopicByTicker(topic.ticker);
+
+    sidebarController.add(boardName, topic.ticker, chat.id, chat.title);
 
     return chat;
   }
 </script>
 
-{#await init() then chat}
+{#await init()}
+  <p>Loading...</p>
+{:then chat}
   <div class="p-4 bg-base-200 border-b border-base-300">
     <h1 class="text-xl font-bold">/{chatRoute.ticker}/ {chat.title}</h1>
   </div>
@@ -59,7 +82,13 @@
           placeholder="Type your reply..."
           bind:value={input}
         ></textarea>
-        <button class="btn btn-accent m-4" onclick={async () => await chat.messages.put(new Message(new Date().toDateString(), input))}>
+        <button
+          class="btn btn-accent m-4"
+          onclick={async () =>
+            await chat.messages.put(
+              new Message(new Date().toDateString(), input)
+            )}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-6 w-6"
@@ -78,4 +107,6 @@
       </div>
     </div>
   </main>
+{:catch ex}
+  <p>{ex.message}</p>
 {/await}
