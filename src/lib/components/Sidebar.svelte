@@ -1,7 +1,16 @@
 <script lang="ts">
+  import type { Controller } from "$lib/controller.svelte";
+
   // import { navigation } from "$lib/navigation.svelte";
   import { sidebarController } from "$lib/sidebar.svelte";
   import CollapsibleThreadList from "./CollapsibleThreadList.svelte";
+
+  type Props = {
+    controller: Controller
+  }
+
+  let { controller }: Props = $props();
+
 </script>
 
 <div class="p-4 bg-base-200 border-b border-base-300">
@@ -19,6 +28,7 @@
   <div class="p-4">
     <button
       class="btn btn-ghost"
+      onclick={() => controller.showTopics()}
     >
       Explore more...
     </button>

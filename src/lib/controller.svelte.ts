@@ -23,6 +23,8 @@ export class ChatViewModel {
   async start() {
     // On initial load, download all messages from db
     if (this.initialLoad) {
+        
+      this.initialLoad = false;
       var ms = await this.chat.messages.index.search(new SearchRequest());
       var initialMessages = ms.map((x) => ({
         id: x.id,
@@ -30,21 +32,22 @@ export class ChatViewModel {
         content: x.content,
         fromSelf: false,
       }));
-      this.messages.push(...initialMessages);
-      this.initialLoad = false;
-    }
 
-    // Then subscribe to new changes
-    this.chat.messages.events.addEventListener("change", (event) => {
-      var newMessages = event.detail.added.map((x) => ({
-        id: x.id,
-        name: x.name,
-        content: x.content,
-        fromSelf: false,
-      }));
-      // Todo: more sophisticated way of handling duplicates
-      this.messages.push(...newMessages);
-    });
+      this.messages.push(...initialMessages);
+
+      // Then subscribe to new changes
+      this.chat.messages.events.addEventListener("change", (event) => {
+        var newMessages = event.detail.added.map((x) => ({
+          id: x.id,
+          name: x.name,
+          content: x.content,
+          fromSelf: false,
+        }));
+        
+        // Todo: more sophisticated way of handling duplicates
+        this.messages.push(...newMessages);
+      });
+    }
   }
 
   stop() {
@@ -76,27 +79,31 @@ export class CatalogViewModel {
 
   async start() {
     if (this.initialLoad) {
+      this.initialLoad = false;
+
       let initialChats = await this.topic.chats.index.search(
         new SearchRequest()
       );
+
       let cs = initialChats.map((chat) => ({
         id: chat.id,
         title: chat.title,
         imageUrl: chat.imageUrl,
         content: chat.content,
       }));
-      this.chats.push(...cs);
-    }
 
-    this.topic.chats.events.addEventListener("change", (event) => {
-      let cs = event.detail.added.map((chat) => ({
-        id: chat.id,
-        title: chat.title,
-        imageUrl: chat.imageUrl,
-        content: chat.content,
-      }));
       this.chats.push(...cs);
-    });
+
+      this.topic.chats.events.addEventListener("change", (event) => {
+        let cs = event.detail.added.map((chat) => ({
+          id: chat.id,
+          title: chat.title,
+          imageUrl: chat.imageUrl,
+          content: chat.content,
+        }));
+        this.chats.push(...cs);
+      });
+    }
   }
 
   async openChat(peer: Peerbit, chatId: string): Promise<ChatViewModel> {
@@ -150,6 +157,7 @@ export class Controller {
 
     if (vm) {
       this.view = { route: "chat", viewModel: vm };
+      return;
     }
 
     let catalogVm: CatalogViewModel;
@@ -170,6 +178,13 @@ export class Controller {
   }
 
   async showCatalog(ticker: string) {
+    var vm = this.catalogs.get(ticker);
+
+    if (vm) {
+      this.view = { route: "catalog", viewModel: vm };
+      return;
+    }
+
     let topic = await this.peer.open(new Topic(ticker));
     let catalogViewModel = new CatalogViewModel(topic);
 

@@ -15,7 +15,7 @@
 
 <div class="flex h-screen">
   <div class="w-96 flex-col hidden md:flex">
-    <Sidebar />
+    <Sidebar {controller} />
   </div>
   <div class="flex-1 flex flex-col">
     {#if controller.view.route == "chat"}
