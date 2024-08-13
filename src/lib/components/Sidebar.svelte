@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { navigation } from "$lib/navigation.svelte";
+  // import { navigation } from "$lib/navigation.svelte";
   import { sidebarController } from "$lib/sidebar.svelte";
   import CollapsibleThreadList from "./CollapsibleThreadList.svelte";
 </script>
@@ -19,7 +19,6 @@
   <div class="p-4">
     <button
       class="btn btn-ghost"
-      onclick={() => navigation.navigate({ route: "boards" })}
     >
       Explore more...
     </button>

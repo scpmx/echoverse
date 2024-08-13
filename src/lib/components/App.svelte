@@ -1,16 +1,15 @@
 <script lang="ts">
-  import type { Peerbit } from "peerbit";
   import CatalogView from "./CatalogView.svelte";
   import ChatView from "./ChatView.svelte";
   import TopicsView from "./TopicsView.svelte";
-  import { navigation } from "$lib/navigation.svelte";
   import Sidebar from "./Sidebar.svelte";
+  import type { Controller } from "$lib/controller.svelte";
   
   type Props = {
-    peer: Peerbit;
+    controller: Controller
   };
 
-  let { peer }: Props = $props();
+  let { controller }: Props = $props();
 
 </script>
 
@@ -19,12 +18,12 @@
     <Sidebar />
   </div>
   <div class="flex-1 flex flex-col">
-    {#if navigation.current.route == "chat"}
-      <ChatView {peer} chatRoute={navigation.current} />
-    {:else if navigation.current.route == "catalog"}
-      <CatalogView {peer} ticker={navigation.current.ticker} />
-    {:else if navigation.current.route == "boards"}
-      <TopicsView />
+    {#if controller.view.route == "chat"}
+      <ChatView {controller} chatVm={controller.view.viewModel} />
+    {:else if controller.view.route == "catalog"}
+      <CatalogView {controller} viewModel={controller.view.viewModel} />
+    {:else if controller.view.route == "topics"}
+      <TopicsView {controller} />
     {/if}
   </div>
 </div>

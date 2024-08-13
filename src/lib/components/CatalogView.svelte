@@ -1,49 +1,29 @@
 <script lang="ts">
-  import { Chat, Topic } from "$lib/database";
-  import { navigation } from "$lib/navigation.svelte";
-  import { SearchRequest } from "@peerbit/document";
-  import type { Peerbit } from "peerbit";
-  import { onMount } from "svelte";
   import NewChatModal from "./NewChatModal.svelte";
-  import { topics } from "$lib/state.svelte";
+  import type { CatalogViewModel, Controller } from "$lib/controller.svelte";
+  import { onMount } from "svelte";
 
   type Props = {
-    peer: Peerbit;
-    ticker: string;
+    controller: Controller,
+    viewModel: CatalogViewModel
   };
 
-  let { peer, ticker }: Props = $props();
-
-  let chats = $state<Chat[]>([]);
+  let { controller, viewModel }: Props = $props();
 
   onMount(async () => {
-    let topic: Topic;
+    await viewModel.start();
+  })
 
-    if (topics.has(ticker)) {
-      topic = topics.get(ticker)!;
-    } else {
-      topic = await peer.open(new Topic(ticker));
-      topics.set(ticker, topic);
-    }
-
-    var ch = await topic.chats.index.search(new SearchRequest());
-
-    chats.push(...ch);
-
-    await topic.chats.events.addEventListener("change", (evt) => {
-      chats.push(...evt.detail.added);
-    });
-  });
 </script>
 
 <div class="p-4 bg-base-200 border-b border-base-300">
-  <h1 class="text-xl font-bold">Catalog /{ticker}/</h1>
+  <h1 class="text-xl font-bold">Catalog {viewModel.getTicker()}</h1>
 </div>
 <main class="relative flex-1 overflow-y-auto">
   <div
     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4"
   >
-    {#each chats as chat}
+    {#each viewModel.chats as chat}
       <div class="card bg-base-100 shadow-xl">
         <figure>
           <img src={chat.imageUrl} alt="Chat" />
@@ -56,12 +36,7 @@
           <div class="card-actions justify-end">
             <button
               class="btn btn-primary"
-              onclick={() =>
-                navigation.navigate({
-                  route: "chat",
-                  ticker: ticker,
-                  id: chat.id,
-                })}
+              onclick={async () => await controller.showChat(viewModel.getTicker(), chat.id)}
             >
               Read Now
             </button>

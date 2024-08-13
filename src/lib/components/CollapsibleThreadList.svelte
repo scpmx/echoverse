@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { navigation } from "$lib/navigation.svelte";
+  // import { navigation } from "$lib/navigation.svelte";
   import type { PinnedBoard } from "$lib/sidebar.svelte";
 
   type Props = {
@@ -19,7 +19,6 @@
     <div class="p-4 rounded-b">
       {#each board.chats as chat}
         <button
-          onclick={() => navigation.navigate({ route: "chat", ticker: board.ticker, id: chat.id })}
           class="btn btn-link {chat.hasUnreadMessages
             ? 'font-bold'
             : 'font-light'}">

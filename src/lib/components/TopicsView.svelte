@@ -1,6 +1,15 @@
 <script lang="ts">
-  import { navigation } from "$lib/navigation.svelte";
+  import type { Controller } from "$lib/controller.svelte";
+
+  // import { navigation } from "$lib/navigation.svelte";
   import { topics } from "$lib/topics";
+  
+  type Props = {
+    controller: Controller
+  }
+
+  let { controller }: Props = $props();
+
 </script>
 
 <div class="p-4 bg-base-200 border-b border-base-300">
@@ -13,8 +22,7 @@
   {#each topics as topic}
     <button
       class="btn btn-outline flex flex-col items-center p-4"
-      onclick={() =>
-        navigation.navigate({ route: "catalog", ticker: topic.ticker })}
+      onclick={async () => await controller.showCatalog(topic.ticker) }
     >
       <span class="text-lg font-bold">{topic.ticker.toUpperCase()}</span>
       <span class="text-sm">{topic.name}</span>
