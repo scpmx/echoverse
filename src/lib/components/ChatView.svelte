@@ -13,7 +13,6 @@
     await chatVm.start();
   })
 
-
   let input = $state("");
 
 </script>
@@ -42,6 +41,7 @@
       ></textarea>
       <button
         class="btn btn-accent m-4"
+        onclick={async () => chatVm.addMessage(input, "Anonymous") }
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

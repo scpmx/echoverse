@@ -1,8 +1,8 @@
 import type { Peerbit } from "peerbit";
-import { Chat, Topic } from "./database";
+import { Chat, Message, Topic } from "./database";
 import { SearchRequest, StringMatch } from "@peerbit/document";
 
-type Message = {
+type UIMessage = {
   id: string;
   name?: string;
   content: string;
@@ -18,12 +18,11 @@ export class ChatViewModel {
     this.initialLoad = true;
   }
 
-  messages = $state<Message[]>([]);
+  messages = $state<UIMessage[]>([]);
 
   async start() {
     // On initial load, download all messages from db
     if (this.initialLoad) {
-        
       this.initialLoad = false;
       var ms = await this.chat.messages.index.search(new SearchRequest());
       var initialMessages = ms.map((x) => ({
@@ -43,19 +42,28 @@ export class ChatViewModel {
           content: x.content,
           fromSelf: false,
         }));
-        
+
         // Todo: more sophisticated way of handling duplicates
         this.messages.push(...newMessages);
       });
     }
   }
 
+  // Called when chat is unpinned
   stop() {
     this.chat.messages.events.removeEventListener("change");
   }
 
   getTitle() {
     return this.chat.title;
+  }
+
+  async addMessage(content: string, name: string) {
+    await this.chat.messages.put(new Message(
+      new Date().toDateString(),
+      content,
+      name
+    ));
   }
 }
 
