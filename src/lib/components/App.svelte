@@ -19,7 +19,7 @@
   </div>
   <div class="flex-1 flex flex-col">
     {#if controller.view.route == "chat"}
-      <ChatView {controller} chatVm={controller.view.viewModel} />
+      <ChatView {controller} viewModel={controller.view.viewModel} />
     {:else if controller.view.route == "catalog"}
       <CatalogView {controller} viewModel={controller.view.viewModel} />
     {:else if controller.view.route == "topics"}

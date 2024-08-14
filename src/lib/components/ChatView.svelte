@@ -4,13 +4,13 @@
   
   type Props = {
     controller: Controller,
-    chatVm: ChatViewModel
+    viewModel: ChatViewModel
   };
 
-  let { controller, chatVm }: Props = $props();
+  let { controller, viewModel }: Props = $props();
 
   onMount(async () => {
-    await chatVm.start();
+    await viewModel.start();
   })
 
   let input = $state("");
@@ -18,12 +18,12 @@
 </script>
 
 <div class="p-4 bg-base-200 border-b border-base-300">
-  <h1 class="text-xl font-bold">{chatVm.getTitle()}</h1>
+  <h1 class="text-xl font-bold">{viewModel.getTitle()}</h1>
 </div>
 <main class="relative flex-1 overflow-y-auto">
   <div class="flex flex-col h-full">
     <div class="flex-grow overflow-y-scroll">
-      {#each chatVm.messages as message}
+      {#each viewModel.messages as message}
         <div class="chat {true ? 'chat-end' : 'chat-start'}">
           <div class="chat-bubble">
             <div class="max-w-96">
@@ -41,7 +41,7 @@
       ></textarea>
       <button
         class="btn btn-accent m-4"
-        onclick={async () => chatVm.addMessage(input, "Anonymous") }
+        onclick={async () => viewModel.addMessage(input, "Anonymous") }
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
