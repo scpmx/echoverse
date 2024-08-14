@@ -16,6 +16,10 @@
   async function sumbit() {
     await viewModel.createChat(title, imageUrl, content, name);
     showModal = false;
+    imageUrl = "";
+    title = "";
+    content = "";
+    name = "";
   }
 
 </script>
