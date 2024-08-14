@@ -1,6 +1,7 @@
 import type { Peerbit } from "peerbit";
 import { Chat, Message, Topic } from "./database";
 import { SearchRequest, StringMatch } from "@peerbit/document";
+import { v4 } from "uuid";
 
 type UIMessage = {
   id: string;
@@ -124,6 +125,17 @@ export class CatalogViewModel {
     let openedChat = await peer.open(chat);
 
     return new ChatViewModel(openedChat);
+  }
+
+  async createChat(title: string, imageUrl: string, content: string, name: string): Promise<void> {
+    await this.topic.chats.put(new Chat(
+        v4(),
+        new Date().toDateString(),
+        title,
+        imageUrl,
+        content,
+        name
+    ));
   }
 
   getTicker(): string {

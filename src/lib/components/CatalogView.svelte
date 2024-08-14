@@ -44,6 +44,6 @@
         </div>
       </div>
     {/each}
-    <NewChatModal />
+    <NewChatModal {viewModel} />
   </div>
 </main>

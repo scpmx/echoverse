@@ -1,25 +1,27 @@
 <script lang="ts">
+  import type { CatalogViewModel } from "$lib/controller.svelte";
+
+  type Props = {
+    viewModel: CatalogViewModel
+  }
+
+  let { viewModel }: Props = $props();
+
   let imageUrl = $state("");
   let title = $state("");
   let content = $state("");
   let name = $state("");
   let showModal = $state(false);
 
-  async function create() {
+  async function sumbit() {
+    await viewModel.createChat(title, imageUrl, content, name);
     showModal = false;
   }
 
-  function openModal() {
-    showModal = true;
-  }
-
-  function closeModal() {
-    showModal = false;
-  }
 </script>
 
 <!-- Button to open the modal -->
-<button class="btn btn-primary" onclick={openModal}>Create New Chat</button>
+<button class="btn btn-primary" onclick={() => showModal = true}>Create New Chat</button>
 
 <!-- Modal -->
 {#if showModal}
@@ -84,8 +86,10 @@
 
       <!-- Modal Action Buttons -->
       <div class="modal-action">
-        <button class="btn" onclick={closeModal}>Cancel</button>
-        <button class="btn btn-primary" onclick={create}>Create Chat</button>
+        <button class="btn" onclick={() => showModal = false}>Cancel</button>
+        <button class="btn btn-primary" onclick={sumbit}>
+          Create Chat
+        </button>
       </div>
     </div>
   </div>
