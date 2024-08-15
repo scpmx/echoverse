@@ -2,10 +2,7 @@
   import "../app.css";
   import { Peerbit } from "peerbit";
   import App from "$lib/components/App.svelte";
-  import { onMount } from "svelte";
-  import { page } from '$app/stores';
-  // import { navigation } from "$lib/navigation.svelte";
-  import { Controller } from "$lib/controller.svelte";
+  import { AppController } from "$lib/controller.svelte";
 
   async function init() {
 
@@ -13,7 +10,7 @@
       directory: "./test"
     })
 
-    var controller = new Controller(peer);
+    var controller = new AppController(peer);
 
     // await peer.bootstrap();
 
