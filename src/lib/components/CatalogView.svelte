@@ -1,10 +1,10 @@
 <script lang="ts">
   import NewChatModal from "./NewChatModal.svelte";
-  import type { CatalogContext, Controller } from "$lib/controller.svelte";
+  import type { CatalogContext, AppController } from "$lib/controller.svelte";
   import { onMount } from "svelte";
 
   type Props = {
-    controller: Controller,
+    controller: AppController,
     context: CatalogContext
   };
 

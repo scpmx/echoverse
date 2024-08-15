@@ -143,23 +143,23 @@ export class CatalogContext {
   }
 }
 
-export type TopicsRoute = {
+type TopicsRoute = {
   route: "topics";
 };
 
-export type CatalogRoute = {
+type CatalogRoute = {
   route: "catalog";
   context: CatalogContext;
 };
 
-export type ChatRoute = {
+type ChatRoute = {
   route: "chat";
   context: ChatContext;
 };
 
 type AppView = TopicsRoute | CatalogRoute | ChatRoute;
 
-export class Controller {
+export class AppController {
   private peer: Peerbit;
   private catalogs: Map<string, CatalogContext>;
   private chats: Map<string, ChatContext>;

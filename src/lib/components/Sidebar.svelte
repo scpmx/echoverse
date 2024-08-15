@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type { Controller } from "$lib/controller.svelte";
+  import type { AppController } from "$lib/controller.svelte";
 
   // import { navigation } from "$lib/navigation.svelte";
   import { sidebarController } from "$lib/sidebar.svelte";
   import CollapsibleThreadList from "./CollapsibleThreadList.svelte";
 
   type Props = {
-    controller: Controller
+    controller: AppController
   }
 
   let { controller }: Props = $props();

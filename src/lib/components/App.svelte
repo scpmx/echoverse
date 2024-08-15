@@ -3,10 +3,10 @@
   import ChatView from "./ChatView.svelte";
   import TopicsView from "./TopicsView.svelte";
   import Sidebar from "./Sidebar.svelte";
-  import type { Controller } from "$lib/controller.svelte";
+  import type { AppController } from "$lib/controller.svelte";
   
   type Props = {
-    controller: Controller
+    controller: AppController
   };
 
   let { controller }: Props = $props();
