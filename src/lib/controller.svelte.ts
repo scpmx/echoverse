@@ -10,7 +10,7 @@ type UIMessage = {
   fromSelf: boolean;
 };
 
-export class ChatViewModel {
+export class ChatContext {
   private chat: Chat;
   private initialLoad: boolean;
 
@@ -75,7 +75,7 @@ type UIChat = {
   content: string;
 };
 
-export class CatalogViewModel {
+export class CatalogContext {
   private topic: Topic;
   private initialLoad: boolean;
 
@@ -115,7 +115,7 @@ export class CatalogViewModel {
     }
   }
 
-  async openChat(peer: Peerbit, chatId: string): Promise<ChatViewModel> {
+  async openChat(peer: Peerbit, chatId: string): Promise<ChatContext> {
     var [chat] = await this.topic.chats.index.search(
       new SearchRequest({
         query: [new StringMatch({ key: "id", value: chatId })],
@@ -124,7 +124,7 @@ export class CatalogViewModel {
 
     let openedChat = await peer.open(chat);
 
-    return new ChatViewModel(openedChat);
+    return new ChatContext(openedChat);
   }
 
   async createChat(title: string, imageUrl: string, content: string, name: string): Promise<void> {
@@ -149,67 +149,68 @@ export type TopicsRoute = {
 
 export type CatalogRoute = {
   route: "catalog";
-  viewModel: CatalogViewModel;
+  context: CatalogContext;
 };
 
 export type ChatRoute = {
   route: "chat";
-  viewModel: ChatViewModel;
+  context: ChatContext;
 };
 
-export type View = TopicsRoute | CatalogRoute | ChatRoute;
+type AppView = TopicsRoute | CatalogRoute | ChatRoute;
 
 export class Controller {
   private peer: Peerbit;
-  private catalogs: Map<string, CatalogViewModel>;
-  private chats: Map<string, ChatViewModel>;
+  private catalogs: Map<string, CatalogContext>;
+  private chats: Map<string, ChatContext>;
 
-  view = $state<View>({ route: "topics" });
+  view = $state<AppView>({ route: "topics" });
 
   constructor(peer: Peerbit) {
     this.peer = peer;
-    this.chats = new Map<string, ChatViewModel>();
-    this.catalogs = new Map<string, CatalogViewModel>();
+    this.chats = new Map<string, ChatContext>();
+    this.catalogs = new Map<string, CatalogContext>();
   }
 
   async showChat(ticker: string, chatId: string) {
-    let vm = this.chats.get(chatId);
 
-    if (vm) {
-      this.view = { route: "chat", viewModel: vm };
+    let context = this.chats.get(chatId);
+
+    if (context) {
+      this.view = { route: "chat", context: context };
       return;
     }
 
-    let catalogVm: CatalogViewModel;
+    let catalogVm: CatalogContext;
 
     var savedCatalogVm = this.catalogs.get(ticker);
     if (savedCatalogVm) {
       catalogVm = savedCatalogVm;
     } else {
       let topic = await this.peer.open(new Topic(ticker));
-      catalogVm = new CatalogViewModel(topic);
+      catalogVm = new CatalogContext(topic);
       this.catalogs.set(ticker, catalogVm);
     }
 
     let chatVm = await catalogVm.openChat(this.peer, chatId);
     this.chats.set(chatId, chatVm);
 
-    this.view = { route: "chat", viewModel: chatVm };
+    this.view = { route: "chat", context: chatVm };
   }
 
   async showCatalog(ticker: string) {
     var vm = this.catalogs.get(ticker);
 
     if (vm) {
-      this.view = { route: "catalog", viewModel: vm };
+      this.view = { route: "catalog", context: vm };
       return;
     }
 
     let topic = await this.peer.open(new Topic(ticker));
-    let catalogViewModel = new CatalogViewModel(topic);
+    let catalogViewModel = new CatalogContext(topic);
 
     this.catalogs.set(ticker, catalogViewModel);
-    this.view = { route: "catalog", viewModel: catalogViewModel };
+    this.view = { route: "catalog", context: catalogViewModel };
   }
 
   showTopics() {

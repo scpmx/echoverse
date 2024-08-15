@@ -1,16 +1,16 @@
 <script lang="ts">
-  import type { ChatViewModel, Controller } from "$lib/controller.svelte";
+  import type { ChatContext, Controller } from "$lib/controller.svelte";
   import { onMount } from "svelte";
   
   type Props = {
     controller: Controller,
-    viewModel: ChatViewModel
+    context: ChatContext
   };
 
-  let { controller, viewModel }: Props = $props();
+  let { controller, context }: Props = $props();
 
   onMount(async () => {
-    await viewModel.start();
+    await context.start();
   })
 
   let input = $state("");
@@ -18,12 +18,12 @@
 </script>
 
 <div class="p-4 bg-base-200 border-b border-base-300">
-  <h1 class="text-xl font-bold">{viewModel.getTitle()}</h1>
+  <h1 class="text-xl font-bold">{context.getTitle()}</h1>
 </div>
 <main class="relative flex-1 overflow-y-auto">
   <div class="flex flex-col h-full">
     <div class="flex-grow overflow-y-scroll">
-      {#each viewModel.messages as message}
+      {#each context.messages as message}
         <div class="chat {true ? 'chat-end' : 'chat-start'}">
           <div class="chat-bubble">
             <div class="max-w-96">
@@ -41,7 +41,7 @@
       ></textarea>
       <button
         class="btn btn-accent m-4"
-        onclick={async () => viewModel.addMessage(input, "Anonymous") }
+        onclick={async () => context.addMessage(input, "Anonymous") }
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -19,9 +19,9 @@
   </div>
   <div class="flex-1 flex flex-col">
     {#if controller.view.route == "chat"}
-      <ChatView {controller} viewModel={controller.view.viewModel} />
+      <ChatView {controller} context={controller.view.context} />
     {:else if controller.view.route == "catalog"}
-      <CatalogView {controller} viewModel={controller.view.viewModel} />
+      <CatalogView {controller} context={controller.view.context} />
     {:else if controller.view.route == "topics"}
       <TopicsView {controller} />
     {/if}
