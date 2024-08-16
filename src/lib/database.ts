@@ -1,7 +1,7 @@
 import { field, option, variant } from "@dao-xyz/borsh";
 import { Documents } from "@peerbit/document";
 import { Program } from "@peerbit/program";
-import { sha256Sync } from "@peerbit/crypto";
+import { PublicSignKey, sha256Sync } from "@peerbit/crypto";
 import { v4 as uuid } from "uuid";
 import { concat } from "uint8arrays";
 
@@ -179,6 +179,56 @@ export class Topic extends Program {
             canOpen: (thread) => {
                 return true;
             }
+        });
+    }
+}
+
+@variant(0)
+export class PinnedChat {
+
+    @field({ type: "string" })
+    id: string;
+
+    @field({ type: "string" })
+    ticker: string;
+
+    @field({ type: "string" })
+    chatId: string;
+
+    constructor(
+        ticker: string,
+        chatId: string
+    ) {
+        this.id = uuid();
+        this.ticker = ticker;
+        this.chatId = chatId;
+    }
+}
+
+export class Sidebar extends Program {
+
+    @field({ type: PublicSignKey })
+    user: PublicSignKey;
+
+    @field({ type: Documents })
+    chats: Documents<PinnedChat>;
+
+    constructor(
+        user: PublicSignKey
+    ) {
+        super();
+        this.user = user;
+        this.chats = new Documents<PinnedChat>({
+            id: concat([
+                new TextEncoder().encode("sidebar"),
+                user.bytes
+            ])
+        })
+    }
+
+    async open(): Promise<void> {
+        await this.chats.open({
+            type: PinnedChat
         });
     }
 }

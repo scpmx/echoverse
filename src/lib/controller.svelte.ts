@@ -1,146 +1,32 @@
 import type { Peerbit } from "peerbit";
-import { Chat, Message, Topic } from "./database";
-import { SearchRequest, StringMatch } from "@peerbit/document";
-import { v4 } from "uuid";
+import { CatalogContext } from "./contexts/catalog.svelte";
+import { ChatContext } from "./contexts/chat.svelte";
+import { Sidebar, Topic } from "./database";
+import type { IContext } from "./interfaces/IContext";
 
-type UIMessage = {
+export type SidebarChat = {
   id: string;
-  name?: string;
-  content: string;
-  fromSelf: boolean;
-};
-
-export class ChatContext {
-  private chat: Chat;
-  private initialLoad: boolean;
-
-  constructor(chat: Chat) {
-    this.chat = chat;
-    this.initialLoad = true;
-  }
-
-  messages = $state<UIMessage[]>([]);
-
-  async start() {
-    // On initial load, download all messages from db
-    if (this.initialLoad) {
-      this.initialLoad = false;
-      var ms = await this.chat.messages.index.search(new SearchRequest());
-      var initialMessages = ms.map((x) => ({
-        id: x.id,
-        name: x.name,
-        content: x.content,
-        fromSelf: false,
-      }));
-
-      this.messages.push(...initialMessages);
-
-      // Then subscribe to new changes
-      this.chat.messages.events.addEventListener("change", (event) => {
-        var newMessages = event.detail.added.map((x) => ({
-          id: x.id,
-          name: x.name,
-          content: x.content,
-          fromSelf: false,
-        }));
-
-        // Todo: more sophisticated way of handling duplicates
-        this.messages.push(...newMessages);
-      });
-    }
-  }
-
-  // Called when chat is unpinned
-  stop() {
-    this.chat.messages.events.removeEventListener("change");
-  }
-
-  getTitle() {
-    return this.chat.title;
-  }
-
-  async addMessage(content: string, name: string) {
-    await this.chat.messages.put(new Message(
-      new Date().toDateString(),
-      content,
-      name
-    ));
-  }
-}
-
-type UIChat = {
-  id: string;
+  ticker: string;
+  chatId: string;
   title: string;
-  imageUrl: string;
-  content: string;
+  hasUnreadMessages: boolean;
 };
 
-export class CatalogContext {
-  private topic: Topic;
-  private initialLoad: boolean;
+export class SidebarContext {
 
-  chats = $state<UIChat[]>([]);
+    chats = $state<SidebarChat[]>([])
+    
+    private sidebar: Sidebar;
 
-  constructor(topic: Topic) {
-    this.topic = topic;
-    this.initialLoad = true;
-  }
-
-  async start() {
-    if (this.initialLoad) {
-      this.initialLoad = false;
-
-      let initialChats = await this.topic.chats.index.search(
-        new SearchRequest()
-      );
-
-      let cs = initialChats.map((chat) => ({
-        id: chat.id,
-        title: chat.title,
-        imageUrl: chat.imageUrl,
-        content: chat.content,
-      }));
-
-      this.chats.push(...cs);
-
-      this.topic.chats.events.addEventListener("change", (event) => {
-        let cs = event.detail.added.map((chat) => ({
-          id: chat.id,
-          title: chat.title,
-          imageUrl: chat.imageUrl,
-          content: chat.content,
-        }));
-        this.chats.push(...cs);
-      });
+    constructor(
+        sidebar: Sidebar
+    ) {
+        this.sidebar = sidebar;
     }
-  }
 
-  async openChat(peer: Peerbit, chatId: string): Promise<ChatContext> {
-    var [chat] = await this.topic.chats.index.search(
-      new SearchRequest({
-        query: [new StringMatch({ key: "id", value: chatId })],
-      })
-    );
-
-    let openedChat = await peer.open(chat);
-
-    return new ChatContext(openedChat);
-  }
-
-  async createChat(title: string, imageUrl: string, content: string, name: string): Promise<void> {
-    await this.topic.chats.put(new Chat(
-        v4(),
-        new Date().toDateString(),
-        title,
-        imageUrl,
-        content,
-        name
-    ));
-  }
-
-  getTicker(): string {
-    return this.topic.ticker;
-  }
+    async open(peer: Peerbit) {
+        await peer.open(this.sidebar);
+    }
 }
 
 type TopicsRoute = {
@@ -149,71 +35,85 @@ type TopicsRoute = {
 
 type CatalogRoute = {
   route: "catalog";
-  context: CatalogContext;
+  catalog: CatalogContext;
 };
 
 type ChatRoute = {
   route: "chat";
-  context: ChatContext;
+  chat: ChatContext;
 };
 
 type AppView = TopicsRoute | CatalogRoute | ChatRoute;
 
 export class AppController {
+
   private peer: Peerbit;
+
+  // Ticker to catalog context
   private catalogs: Map<string, CatalogContext>;
+
+  // ChatId to chat context
   private chats: Map<string, ChatContext>;
 
-  view = $state<AppView>({ route: "topics" });
+  mainContent = $state<AppView>({ route: "topics" });
 
+  sidebarContext: SidebarContext
+  
   constructor(peer: Peerbit) {
     this.peer = peer;
     this.chats = new Map<string, ChatContext>();
     this.catalogs = new Map<string, CatalogContext>();
+    this.sidebarContext = new SidebarContext(new Sidebar(peer.identity.publicKey))
   }
 
-  async showChat(ticker: string, chatId: string) {
+  async initContext(context: IContext) {
+    await context.open(this.peer);
+  }
 
-    let context = this.chats.get(chatId);
+  async showChat(ticker: string, chatId: string): Promise<void> {
+    let chatContext = this.chats.get(chatId);
 
-    if (context) {
-      this.view = { route: "chat", context: context };
+    if (chatContext) {
+      this.mainContent = { route: "chat", chat: chatContext };
       return;
     }
 
-    let catalogVm: CatalogContext;
+    let catalogContext: CatalogContext;
 
     var savedCatalogVm = this.catalogs.get(ticker);
     if (savedCatalogVm) {
-      catalogVm = savedCatalogVm;
+        catalogContext = savedCatalogVm;
     } else {
       let topic = await this.peer.open(new Topic(ticker));
-      catalogVm = new CatalogContext(topic);
-      this.catalogs.set(ticker, catalogVm);
+      catalogContext = new CatalogContext(topic);
+      this.catalogs.set(ticker, catalogContext);
     }
 
-    let chatVm = await catalogVm.openChat(this.peer, chatId);
-    this.chats.set(chatId, chatVm);
+    let ch = await catalogContext.getChat(chatId);
+    let chat = await this.peer.open(ch);
+    let chatCtxt = new ChatContext(chat);
+    this.chats.set(chatId, chatCtxt);
 
-    this.view = { route: "chat", context: chatVm };
+    this.mainContent = { route: "chat", chat: chatCtxt };
   }
 
   async showCatalog(ticker: string) {
+
     var vm = this.catalogs.get(ticker);
 
     if (vm) {
-      this.view = { route: "catalog", context: vm };
+      this.mainContent = { route: "catalog", catalog: vm };
       return;
     }
 
-    let topic = await this.peer.open(new Topic(ticker));
-    let catalogViewModel = new CatalogContext(topic);
+    let topic = new Topic(ticker);
+    let catalogContext = new CatalogContext(topic);
 
-    this.catalogs.set(ticker, catalogViewModel);
-    this.view = { route: "catalog", context: catalogViewModel };
+    this.catalogs.set(ticker, catalogContext);
+    this.mainContent = { route: "catalog", catalog: catalogContext };
   }
 
   showTopics() {
-    this.view = { route: "topics" };
+    this.mainContent = { route: "topics" };
   }
 }

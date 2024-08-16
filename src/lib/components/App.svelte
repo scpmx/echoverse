@@ -18,11 +18,11 @@
     <Sidebar {controller} />
   </div>
   <div class="flex-1 flex flex-col">
-    {#if controller.view.route == "chat"}
-      <ChatView {controller} context={controller.view.context} />
-    {:else if controller.view.route == "catalog"}
-      <CatalogView {controller} context={controller.view.context} />
-    {:else if controller.view.route == "topics"}
+    {#if controller.mainContent.route == "chat"}
+      <ChatView {controller} chat={controller.mainContent.chat} />
+    {:else if controller.mainContent.route == "catalog"}
+      <CatalogView {controller} catalog={controller.mainContent.catalog} />
+    {:else if controller.mainContent.route == "topics"}
       <TopicsView {controller} />
     {/if}
   </div>

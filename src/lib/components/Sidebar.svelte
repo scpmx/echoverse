@@ -1,10 +1,7 @@
 <script lang="ts">
   import type { AppController } from "$lib/controller.svelte";
-
-  // import { navigation } from "$lib/navigation.svelte";
-  import { sidebarController } from "$lib/sidebar.svelte";
   import CollapsibleThreadList from "./CollapsibleThreadList.svelte";
-
+  
   type Props = {
     controller: AppController
   }
@@ -17,13 +14,13 @@
   <h2 class="text-xl font-bold">Your Threads</h2>
 </div>
 <div class="flex-1 overflow-y-auto p-4 border-r border-base-300">
-  {#if sidebarController.pinnedBoards.length > 0}
-    {#each sidebarController.pinnedBoards as board}
-      <CollapsibleThreadList {board} />
+  <!-- {#if controller.sidebarContext.chats.length > 0}
+    {#each controller.sidebarContext.chats as chat}
+      <CollapsibleThreadList {chat} />
     {/each}
   {:else}
     <h3 class="p-2 text-xl font-bold">No pinned threads</h3>
-  {/if}
+  {/if} -->
 
   <div class="p-4">
     <button

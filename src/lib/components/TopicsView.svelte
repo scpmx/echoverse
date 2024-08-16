@@ -1,8 +1,6 @@
 <script lang="ts">
   import type { AppController } from "$lib/controller.svelte";
-
-  // import { navigation } from "$lib/navigation.svelte";
-  import { topics } from "$lib/topics";
+  import { topics } from "$lib/static/topics";
   
   type Props = {
     controller: AppController

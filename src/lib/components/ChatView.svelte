@@ -1,16 +1,18 @@
 <script lang="ts">
-  import type { ChatContext, AppController } from "$lib/controller.svelte";
+  import type { ChatContext } from "$lib/contexts/chat.svelte";
+  import type { AppController } from "$lib/controller.svelte";
   import { onMount } from "svelte";
   
   type Props = {
     controller: AppController,
-    context: ChatContext
+    chat: ChatContext
   };
 
-  let { controller, context }: Props = $props();
+  let { controller, chat }: Props = $props();
 
   onMount(async () => {
-    await context.start();
+    await controller.initContext(chat);
+    await chat.listen();
   })
 
   let input = $state("");
@@ -18,12 +20,12 @@
 </script>
 
 <div class="p-4 bg-base-200 border-b border-base-300">
-  <h1 class="text-xl font-bold">{context.getTitle()}</h1>
+  <h1 class="text-xl font-bold">{chat.getTitle()}</h1>
 </div>
 <main class="relative flex-1 overflow-y-auto">
   <div class="flex flex-col h-full">
     <div class="flex-grow overflow-y-scroll">
-      {#each context.messages as message}
+      {#each chat.messages as message}
         <div class="chat {true ? 'chat-end' : 'chat-start'}">
           <div class="chat-bubble">
             <div class="max-w-96">
@@ -41,7 +43,7 @@
       ></textarea>
       <button
         class="btn btn-accent m-4"
-        onclick={async () => context.addMessage(input, "Anonymous") }
+        onclick={async () => chat.addMessage(input, "Anonymous") }
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
