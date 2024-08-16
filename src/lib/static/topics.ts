@@ -16,3 +16,8 @@ export let topicsByTicker: Map<string, Topic> = topics.reduce(
   (acc, topic) => acc.set(topic.ticker, topic),
   new Map<string, Topic>()
 );
+
+export let topicNamesByTicker: Map<string, string> = topics.reduce(
+  (acc, topic) => acc.set(topic.ticker, topic.name),
+  new Map<string, string>()
+);

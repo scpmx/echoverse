@@ -13,14 +13,16 @@
   onMount(async () => {
     await controller.initContext(chat);
     await chat.listen();
-  })
+    
+    controller.sidebarContext.add(chat.ticker, chat.title, chat.address);
+  });
 
   let input = $state("");
 
 </script>
 
 <div class="p-4 bg-base-200 border-b border-base-300">
-  <h1 class="text-xl font-bold">{chat.getTitle()}</h1>
+  <h1 class="text-xl font-bold">{chat.title}</h1>
 </div>
 <main class="relative flex-1 overflow-y-auto">
   <div class="flex flex-col h-full">

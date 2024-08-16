@@ -6,7 +6,7 @@ import type { Peerbit } from "peerbit";
 export type SidebarChat = {
   id: string;
   ticker: string;
-  chatId: string;
+  address: string;
   title: string;
   hasUnreadMessages: boolean;
 };
@@ -51,8 +51,8 @@ export class SidebarContext implements IContext {
       let chats: SidebarChat[] = pinnedChats.map((chat) => ({
         id: chat.id,
         ticker: chat.ticker,
-        chatId: chat.chatId,
-        title: "Test",
+        address: chat.address,
+        title: chat.title,
         hasUnreadMessages: false,
       }));
 
@@ -62,8 +62,8 @@ export class SidebarContext implements IContext {
         let newChats: SidebarChat[] = event.detail.added.map((chat) => ({
           id: chat.id,
           ticker: chat.ticker,
-          chatId: chat.chatId,
-          title: "Test",
+          address: chat.address,
+          title: chat.title,
           hasUnreadMessages: false,
         }));
 
@@ -83,7 +83,7 @@ export class SidebarContext implements IContext {
     }
   }
 
-  async add(ticker: string, chatId: string) {
-    await this.sidebar.chats.put(new PinnedChat(ticker, chatId));
+  async add(ticker: string, title: string, address: string) {
+    await this.sidebar.chats.put(new PinnedChat(ticker, title, address));
   }
 }

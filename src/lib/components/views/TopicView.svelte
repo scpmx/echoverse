@@ -46,6 +46,6 @@
         </div>
       </div>
     {/each}
-    <NewChatModal {topic} />
+    <NewChatModal {controller} {topic} />
   </div>
 </main>

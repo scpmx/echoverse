@@ -38,6 +38,9 @@ export class Chat extends Program {
     @field({ type: "string" })
     id: string;
 
+    @field({ type: "string" })
+    ticker: string;
+
     @field({ type: option("string") })
     name?: string;
 
@@ -58,6 +61,7 @@ export class Chat extends Program {
 
     constructor(
         id: string,
+        ticker: string,
         date: string,
         title: string,
         imageUrl: string,
@@ -66,6 +70,7 @@ export class Chat extends Program {
     ) {
         super();
         this.id = id;
+        this.ticker = ticker;
         this.date = date;
         this.name = name;
         this.title = title;
@@ -96,6 +101,9 @@ export class IndexableChat {
     @field({ type: "string" })
     id: string;
 
+    @field({ type: "string" })
+    ticker: string;
+
     @field({ type: option("string") })
     name?: string;
 
@@ -116,6 +124,7 @@ export class IndexableChat {
 
     constructor(
         id: string,
+        ticker: string,
         date: string,
         imageUrl: string,
         title: string,
@@ -124,6 +133,7 @@ export class IndexableChat {
         name?: string,
     ) {
         this.id = id;
+        this.ticker = ticker;
         this.date = date;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -172,6 +182,7 @@ export class Topic extends Program {
                 transform: async (thread, _) => {
                     return new IndexableChat(
                         thread.id,
+                        thread.ticker,
                         thread.date,
                         thread.imageUrl, 
                         thread.title, 
@@ -198,15 +209,20 @@ export class PinnedChat {
     ticker: string;
 
     @field({ type: "string" })
-    chatId: string;
+    title: string;
+
+    @field({ type: "string" })
+    address: string;
 
     constructor(
         ticker: string,
-        chatId: string
+        title: string,
+        address: string
     ) {
         this.id = uuid();
         this.ticker = ticker;
-        this.chatId = chatId;
+        this.title = title;
+        this.address = address;
     }
 }
 
