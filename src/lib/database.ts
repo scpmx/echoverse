@@ -205,6 +205,7 @@ export class PinnedChat {
     }
 }
 
+@variant("sidebar")
 export class Sidebar extends Program {
 
     @field({ type: PublicSignKey })
@@ -219,11 +220,13 @@ export class Sidebar extends Program {
         super();
         this.owner = owner;
         this.chats = new Documents<PinnedChat>({
-            id: concat([
-                new TextEncoder().encode("sidebar"),
-                owner.bytes
-            ])
-        })
+            id: sha256Sync(
+                concat([
+                    new TextEncoder().encode("sidebar"),
+                    owner.bytes
+                ])
+            )
+        });
     }
 
     async open(): Promise<void> {
