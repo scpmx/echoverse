@@ -61,6 +61,7 @@ export class AppController {
         catalogContext = savedCatalogVm;
     } else {
       var topic = new Topic(ticker);
+      await this.peer.open(topic);
       catalogContext = new CatalogContext(topic);
       this.catalogs.set(ticker, catalogContext);
     }
