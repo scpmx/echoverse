@@ -6,9 +6,7 @@
 
   async function init() {
 
-    var peer = await Peerbit.create({
-      directory: "./test2"
-    })
+    var peer = await Peerbit.create();
 
     var controller = new AppController(peer);
 

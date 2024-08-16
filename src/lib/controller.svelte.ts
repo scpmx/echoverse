@@ -3,31 +3,7 @@ import { CatalogContext } from "./contexts/catalog.svelte";
 import { ChatContext } from "./contexts/chat.svelte";
 import { Sidebar, Topic } from "./database";
 import type { IContext } from "./interfaces/IContext";
-
-export type SidebarChat = {
-  id: string;
-  ticker: string;
-  chatId: string;
-  title: string;
-  hasUnreadMessages: boolean;
-};
-
-export class SidebarContext {
-
-    chats = $state<SidebarChat[]>([])
-    
-    private sidebar: Sidebar;
-
-    constructor(
-        sidebar: Sidebar
-    ) {
-        this.sidebar = sidebar;
-    }
-
-    async open(peer: Peerbit) {
-        await peer.open(this.sidebar);
-    }
-}
+import { SidebarContext } from "./contexts/sidebar.svelte";
 
 type TopicsRoute = {
   route: "topics";
@@ -84,14 +60,13 @@ export class AppController {
     if (savedCatalogVm) {
         catalogContext = savedCatalogVm;
     } else {
-      let topic = await this.peer.open(new Topic(ticker));
+      var topic = new Topic(ticker);
       catalogContext = new CatalogContext(topic);
       this.catalogs.set(ticker, catalogContext);
     }
 
     let ch = await catalogContext.getChat(chatId);
-    let chat = await this.peer.open(ch);
-    let chatCtxt = new ChatContext(chat);
+    let chatCtxt = new ChatContext(ch);
     this.chats.set(chatId, chatCtxt);
 
     this.mainContent = { route: "chat", chat: chatCtxt };

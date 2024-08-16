@@ -208,20 +208,20 @@ export class PinnedChat {
 export class Sidebar extends Program {
 
     @field({ type: PublicSignKey })
-    user: PublicSignKey;
+    owner: PublicSignKey;
 
     @field({ type: Documents })
     chats: Documents<PinnedChat>;
 
     constructor(
-        user: PublicSignKey
+        owner: PublicSignKey
     ) {
         super();
-        this.user = user;
+        this.owner = owner;
         this.chats = new Documents<PinnedChat>({
             id: concat([
                 new TextEncoder().encode("sidebar"),
-                user.bytes
+                owner.bytes
             ])
         })
     }

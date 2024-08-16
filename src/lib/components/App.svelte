@@ -15,7 +15,7 @@
 
 <div class="flex h-screen">
   <div class="w-96 flex-col hidden md:flex">
-    <Sidebar {controller} />
+    <Sidebar {controller} context={controller.sidebarContext} />
   </div>
   <div class="flex-1 flex flex-col">
     {#if controller.mainContent.route == "chat"}

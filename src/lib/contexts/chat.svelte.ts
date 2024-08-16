@@ -68,7 +68,7 @@ export class ChatContext implements IContext {
   }
 
   async open(peer: Peerbit): Promise<void> {
-    if (this.opened) {
+    if (!this.opened) {
       this.opened = true;
       await peer.open(this.chat);
     }
