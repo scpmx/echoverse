@@ -13,8 +13,7 @@
   onMount(async () => {
     await controller.initContext(chat);
     await chat.listen();
-    
-    controller.sidebarContext.add(chat.ticker, chat.title, chat.address);
+    await controller.sidebarContext.add(chat.ticker, chat.title, chat.address);
   });
 
   let input = $state("");
