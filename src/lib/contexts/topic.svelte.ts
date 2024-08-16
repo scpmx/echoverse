@@ -6,12 +6,14 @@ import { v4 } from "uuid";
 
 type UIChat = {
   id: string;
+  ticker: string;
   title: string;
   imageUrl: string;
   content: string;
+  address: string;
 };
 
-export class CatalogContext implements IContext {
+export class TopicContext implements IContext {
 
   private topic: Topic;
   private initialLoad: boolean;
@@ -42,9 +44,11 @@ export class CatalogContext implements IContext {
 
       let cs = initialChats.map((chat) => ({
         id: chat.id,
+        ticker: chat.ticker,
         title: chat.title,
         imageUrl: chat.imageUrl,
         content: chat.content,
+        address: chat.address
       }));
 
       this.chats.push(...cs);
@@ -52,9 +56,11 @@ export class CatalogContext implements IContext {
       this.topic.chats.events.addEventListener("change", (event) => {
         let cs = event.detail.added.map((chat) => ({
           id: chat.id,
+          ticker: chat.ticker,
           title: chat.title,
           imageUrl: chat.imageUrl,
           content: chat.content,
+          address: chat.address
         }));
         this.chats.push(...cs);
       });
@@ -73,17 +79,18 @@ export class CatalogContext implements IContext {
   }
 
   async createChat(
+    ticker: string,
     title: string,
     imageUrl: string,
     content: string,
     name: string
-  ): Promise<void> {
-    await this.topic.chats.put(
-      new Chat(v4(), new Date().toDateString(), title, imageUrl, content, name)
-    );
+  ): Promise<string> {
+    var chat = new Chat(v4(), ticker, new Date().toDateString(), title, imageUrl, content, name)
+    await this.topic.chats.put(chat);
+    return chat.address;
   }
 
-  getTicker(): string {
+  get ticker(): string {
     return this.topic.ticker;
   }
 }

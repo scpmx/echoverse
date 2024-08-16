@@ -1,12 +1,13 @@
 <script lang="ts">
-  import type { CatalogContext } from "$lib/contexts/catalog.svelte";
-
+  import type { TopicContext } from "$lib/contexts/topic.svelte";
+  import type { AppController } from "$lib/controller.svelte";
 
   type Props = {
-    catalog: CatalogContext
+    controller: AppController,
+    topic: TopicContext
   }
 
-  let { catalog }: Props = $props();
+  let { controller, topic }: Props = $props();
 
   let imageUrl = $state("");
   let title = $state("");
@@ -15,7 +16,8 @@
   let showModal = $state(false);
 
   async function sumbit() {
-    await catalog.createChat(title, imageUrl, content, name);
+    var address = await topic.createChat(topic.ticker, title, imageUrl, content, name);
+    await controller.openChat(address);
     showModal = false;
     imageUrl = "";
     title = "";

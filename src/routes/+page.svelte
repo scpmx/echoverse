@@ -8,11 +8,9 @@
 
     var peer = await Peerbit.create();
 
-    var controller = new AppController(peer);
+    await peer.bootstrap();
 
-    // await peer.bootstrap();
-
-    return controller;
+    return new AppController(peer);
   }
 
   // onMount(() => {

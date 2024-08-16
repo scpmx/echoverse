@@ -1,17 +1,18 @@
 import type { Peerbit } from "peerbit";
-import { CatalogContext } from "./contexts/catalog.svelte";
+import { TopicContext } from "./contexts/topic.svelte";
 import { ChatContext } from "./contexts/chat.svelte";
-import { Sidebar, Topic } from "./database";
+import { Chat, Sidebar } from "./database";
 import type { IContext } from "./interfaces/IContext";
 import { SidebarContext } from "./contexts/sidebar.svelte";
+import { topicsByTicker } from "./static/topics";
 
 type TopicsRoute = {
   route: "topics";
 };
 
-type CatalogRoute = {
-  route: "catalog";
-  catalog: CatalogContext;
+type TopicRoute = {
+  route: "topic";
+  topic: TopicContext;
 };
 
 type ChatRoute = {
@@ -19,16 +20,16 @@ type ChatRoute = {
   chat: ChatContext;
 };
 
-type AppView = TopicsRoute | CatalogRoute | ChatRoute;
+type AppView = TopicsRoute | TopicRoute | ChatRoute;
 
 export class AppController {
 
   private peer: Peerbit;
 
   // Ticker to catalog context
-  private catalogs: Map<string, CatalogContext>;
+  private topics: Map<string, TopicContext>;
 
-  // ChatId to chat context
+  // address to chat context
   private chats: Map<string, ChatContext>;
 
   mainContent = $state<AppView>({ route: "topics" });
@@ -38,56 +39,56 @@ export class AppController {
   constructor(peer: Peerbit) {
     this.peer = peer;
     this.chats = new Map<string, ChatContext>();
-    this.catalogs = new Map<string, CatalogContext>();
+    this.topics = new Map<string, TopicContext>();
     this.sidebarContext = new SidebarContext(new Sidebar(peer.identity.publicKey))
+  }
+
+  async init() {
+    let openTopics = Object
+      .keys(this.sidebarContext.tickers)
+      .map(ticker => topicsByTicker.get(ticker))
+      .filter(t => t != undefined);
+
+      for (let i = 0; i < openTopics.length; i++) {
+        var topic = await this.peer.open(openTopics[i])
+        var context = new TopicContext(topic);
+        this.topics.set(topic.ticker, context);
+      }
   }
 
   async initContext(context: IContext) {
     await context.open(this.peer);
   }
 
-  async showChat(ticker: string, chatId: string): Promise<void> {
-    let chatContext = this.chats.get(chatId);
+  async openChat(address: string): Promise<void> {
+    var chatContext = this.chats.get(address);
 
-    if (chatContext) {
-      this.mainContent = { route: "chat", chat: chatContext };
-      return;
+    if (!chatContext) {
+      var chat = await this.peer.open<Chat>(address);
+      chatContext = new ChatContext(chat);
+      this.chats.set(address, chatContext);
     }
 
-    let catalogContext: CatalogContext;
-
-    var savedCatalogVm = this.catalogs.get(ticker);
-    if (savedCatalogVm) {
-        catalogContext = savedCatalogVm;
-    } else {
-      var topic = new Topic(ticker);
-      await this.peer.open(topic);
-      catalogContext = new CatalogContext(topic);
-      this.catalogs.set(ticker, catalogContext);
-    }
-
-    let ch = await catalogContext.getChat(chatId);
-    let chatCtxt = new ChatContext(ch);
-    this.chats.set(chatId, chatCtxt);
-
-    this.mainContent = { route: "chat", chat: chatCtxt };
-    this.sidebarContext.add(ticker, chatId);
+    this.mainContent = { route: "chat", chat: chatContext }
   }
 
-  async showCatalog(ticker: string) {
+  async openTopic(ticker: string) {
+    var topicContext = this.topics.get(ticker);
 
-    var vm = this.catalogs.get(ticker);
-
-    if (vm) {
-      this.mainContent = { route: "catalog", catalog: vm };
-      return;
+    if (!topicContext) {
+      let topic = topicsByTicker.get(ticker);
+      if (topic) {
+        await this.peer.open(topic);
+        topicContext = new TopicContext(topic);
+        this.topics.set(ticker, topicContext);
+      }
     }
 
-    let topic = new Topic(ticker);
-    let catalogContext = new CatalogContext(topic);
-
-    this.catalogs.set(ticker, catalogContext);
-    this.mainContent = { route: "catalog", catalog: catalogContext };
+    if (topicContext) {
+      this.mainContent = { route: "topic", topic: topicContext }
+    } else {
+      console.error(`Topic '${ticker}' does not exist`);
+    }
   }
 
   showTopics() {

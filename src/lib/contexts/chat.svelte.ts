@@ -57,8 +57,20 @@ export class ChatContext implements IContext {
     this.chat.messages.events.removeEventListener("change");
   }
 
-  getTitle() {
+  get title(): string {
     return this.chat.title;
+  }
+
+  get ticker(): string {
+    return this.chat.ticker;
+  }
+
+  get imageUrl(): string {
+    return this.chat.imageUrl;
+  }
+
+  get address(): string {
+    return this.chat.address;
   }
 
   async addMessage(content: string, name: string) {

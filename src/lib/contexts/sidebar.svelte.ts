@@ -2,61 +2,35 @@ import { PinnedChat, type Sidebar } from "$lib/database";
 import type { IContext } from "$lib/interfaces/IContext";
 import { SearchRequest } from "@peerbit/document";
 import type { Peerbit } from "peerbit";
-import { v4 } from "uuid";
 
 export type SidebarChat = {
   id: string;
   ticker: string;
-  chatId: string;
+  address: string;
   title: string;
   hasUnreadMessages: boolean;
 };
 
 export class SidebarContext implements IContext {
-  chats = $state<SidebarChat[]>([
-    {
-      id: v4(),
-      ticker: "biz",
-      chatId: v4(),
-      title: "Best memecoins?",
-      hasUnreadMessages: true,
-    },
-    {
-      id: v4(),
-      ticker: "biz",
-      chatId: v4(),
-      title: "Is eth washed?",
-      hasUnreadMessages: false,
-    },
-    {
-      id: v4(),
-      ticker: "x",
-      chatId: v4(),
-      title: "Skinwalkers",
-      hasUnreadMessages: false,
-    },
-    {
-      id: v4(),
-      ticker: "x",
-      chatId: v4(),
-      title: "UFO thread",
-      hasUnreadMessages: true,
-    },
-    {
-      id: v4(),
-      ticker: "sci",
-      chatId: v4(),
-      title: "Advanced Arithmitic",
-      hasUnreadMessages: false,
-    },
-    {
-      id: v4(),
-      ticker: "sci",
-      chatId: v4(),
-      title: "Cuckulus",
-      hasUnreadMessages: false,
-    },
-  ]);
+    
+  chats = $state<SidebarChat[]>([]);
+
+  private groupByTicker = (
+    chats: SidebarChat[]
+  ): Record<string, SidebarChat[]> => {
+    return chats.reduce(
+      (acc, chat) => {
+        if (!acc[chat.ticker]) {
+          acc[chat.ticker] = [];
+        }
+        acc[chat.ticker].push(chat);
+        return acc;
+      },
+      {} as Record<string, SidebarChat[]>
+    );
+  };
+
+  tickers = $derived(this.groupByTicker(this.chats))
 
   private sidebar: Sidebar;
   private initialLoad: boolean;
@@ -77,8 +51,8 @@ export class SidebarContext implements IContext {
       let chats: SidebarChat[] = pinnedChats.map((chat) => ({
         id: chat.id,
         ticker: chat.ticker,
-        chatId: chat.chatId,
-        title: "Test",
+        address: chat.address,
+        title: chat.title,
         hasUnreadMessages: false,
       }));
 
@@ -88,8 +62,8 @@ export class SidebarContext implements IContext {
         let newChats: SidebarChat[] = event.detail.added.map((chat) => ({
           id: chat.id,
           ticker: chat.ticker,
-          chatId: chat.chatId,
-          title: "Test",
+          address: chat.address,
+          title: chat.title,
           hasUnreadMessages: false,
         }));
 
@@ -109,7 +83,7 @@ export class SidebarContext implements IContext {
     }
   }
 
-  async add(ticker: string, chatId: string) {
-    await this.sidebar.chats.put(new PinnedChat(ticker, chatId));
+  async add(ticker: string, title: string, address: string) {
+    await this.sidebar.chats.put(new PinnedChat(ticker, title, address));
   }
 }
