@@ -10,11 +10,13 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
   },
   "devDependencies": {
+    "@peerbit/vite": "^1.0.4",
     "@sveltejs/adapter-static": "^3.0.2",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "@tailwindcss/typography": "^0.5.13",
     "@types/bun": "^1.1.6",
+    "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.4.19",
     "daisyui": "^4.12.10",
     "postcss": "^8.4.38",
@@ -28,5 +30,16 @@
   "trustedDependencies": [
     "svelte-preprocess"
   ],
-  "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e"
+  "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e",
+  "dependencies": {
+    "@dao-xyz/borsh": "^5.2.3",
+    "@peerbit/any-store-opfs": "^1.0.0",
+    "@peerbit/crypto": "^2.3.0",
+    "@peerbit/document": "^7.0.7",
+    "@peerbit/indexer-sqlite3": "^1.0.2",
+    "@peerbit/program": "^5.0.1",
+    "peerbit": "^4.0.12",
+    "uint8arrays": "^5.1.0",
+    "uuid": "^10.0.0"
+  }
 }
