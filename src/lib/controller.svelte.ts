@@ -71,6 +71,7 @@ export class AppController {
     this.chats.set(chatId, chatCtxt);
 
     this.mainContent = { route: "chat", chat: chatCtxt };
+    this.sidebarContext.add(ticker, chatId);
   }
 
   async showCatalog(ticker: string) {

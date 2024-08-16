@@ -1,4 +1,4 @@
-import type { Sidebar } from "$lib/database";
+import { PinnedChat, type Sidebar } from "$lib/database";
 import type { IContext } from "$lib/interfaces/IContext";
 import { SearchRequest } from "@peerbit/document";
 import type { Peerbit } from "peerbit";
@@ -107,5 +107,9 @@ export class SidebarContext implements IContext {
       this.opened = true;
       await peer.open(this.sidebar);
     }
+  }
+
+  async add(ticker: string, chatId: string) {
+    await this.sidebar.chats.put(new PinnedChat(ticker, chatId));
   }
 }
