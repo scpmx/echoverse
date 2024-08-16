@@ -1,25 +1,18 @@
-type Topic = {
-  ticker: string;
-  name: string;
-};
+import { Topic } from "$lib/database";
 
 export let topics: Topic[] = [
-  { ticker: "biz", name: "Business and Finance" },
-  { ticker: "sci", name: "Science and Mathematics" },
-  { ticker: "x", name: "Paranormal" },
-  { ticker: "v", name: "Videogames" },
-  { ticker: "b", name: "Random" },
-  { ticker: "k", name: "Weapons" },
-  { ticker: "wsg", name: "Worksafe GIF" },
-  { ticker: "mu", name: "Music" },
-  { ticker: "lit", name: "Literature" },
+  new Topic("biz", "Business and Finance"),
+  new Topic("sci", "Science and Mathematics"),
+  new Topic("x", "Paranormal"),
+  new Topic("v", "Videogames"),
+  new Topic("b", "Random"),
+  new Topic("k", "Weapons"),
+  new Topic("wsg", "Worksafe GIF"),
+  new Topic("mu", "Music"),
+  new Topic("lit", "Literature")
 ];
 
-let topicNamesByTicker: Map<string, string> = topics.reduce(
-  (acc, topic) => acc.set(topic.ticker, topic.name),
-  new Map<string, string>()
+export let topicsByTicker: Map<string, Topic> = topics.reduce(
+  (acc, topic) => acc.set(topic.ticker, topic),
+  new Map<string, Topic>()
 );
-
-export function getTopicByTicker(ticker: string) : string {
-    return topicNamesByTicker.get(ticker)!;
-}

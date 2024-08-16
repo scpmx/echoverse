@@ -1,15 +1,20 @@
 <script lang="ts">
-  import CatalogView from "./CatalogView.svelte";
-  import ChatView from "./ChatView.svelte";
-  import TopicsView from "./TopicsView.svelte";
+  import TopicView from "./views/TopicView.svelte";
+  import ChatView from "./views/ChatView.svelte";
+  import TopicsView from "./views/TopicsView.svelte";
   import Sidebar from "./Sidebar.svelte";
   import type { AppController } from "$lib/controller.svelte";
+  import { onMount } from "svelte";
   
   type Props = {
     controller: AppController
   };
 
   let { controller }: Props = $props();
+
+  onMount(async () => {
+    await controller.init();
+  })
 
 </script>
 
@@ -20,8 +25,8 @@
   <div class="flex-1 flex flex-col">
     {#if controller.mainContent.route == "chat"}
       <ChatView {controller} chat={controller.mainContent.chat} />
-    {:else if controller.mainContent.route == "catalog"}
-      <CatalogView {controller} catalog={controller.mainContent.catalog} />
+    {:else if controller.mainContent.route == "topic"}
+      <TopicView {controller} topic={controller.mainContent.topic} />
     {:else if controller.mainContent.route == "topics"}
       <TopicsView {controller} />
     {/if}

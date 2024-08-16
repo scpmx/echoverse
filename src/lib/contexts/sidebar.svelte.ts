@@ -2,7 +2,6 @@ import { PinnedChat, type Sidebar } from "$lib/database";
 import type { IContext } from "$lib/interfaces/IContext";
 import { SearchRequest } from "@peerbit/document";
 import type { Peerbit } from "peerbit";
-import { v4 } from "uuid";
 
 export type SidebarChat = {
   id: string;
@@ -13,50 +12,25 @@ export type SidebarChat = {
 };
 
 export class SidebarContext implements IContext {
-  chats = $state<SidebarChat[]>([
-    {
-      id: v4(),
-      ticker: "biz",
-      chatId: v4(),
-      title: "Best memecoins?",
-      hasUnreadMessages: true,
-    },
-    {
-      id: v4(),
-      ticker: "biz",
-      chatId: v4(),
-      title: "Is eth washed?",
-      hasUnreadMessages: false,
-    },
-    {
-      id: v4(),
-      ticker: "x",
-      chatId: v4(),
-      title: "Skinwalkers",
-      hasUnreadMessages: false,
-    },
-    {
-      id: v4(),
-      ticker: "x",
-      chatId: v4(),
-      title: "UFO thread",
-      hasUnreadMessages: true,
-    },
-    {
-      id: v4(),
-      ticker: "sci",
-      chatId: v4(),
-      title: "Advanced Arithmitic",
-      hasUnreadMessages: false,
-    },
-    {
-      id: v4(),
-      ticker: "sci",
-      chatId: v4(),
-      title: "Cuckulus",
-      hasUnreadMessages: false,
-    },
-  ]);
+    
+  chats = $state<SidebarChat[]>([]);
+
+  private groupByTicker = (
+    chats: SidebarChat[]
+  ): Record<string, SidebarChat[]> => {
+    return chats.reduce(
+      (acc, chat) => {
+        if (!acc[chat.ticker]) {
+          acc[chat.ticker] = [];
+        }
+        acc[chat.ticker].push(chat);
+        return acc;
+      },
+      {} as Record<string, SidebarChat[]>
+    );
+  };
+
+  tickers = $derived(this.groupByTicker(this.chats))
 
   private sidebar: Sidebar;
   private initialLoad: boolean;

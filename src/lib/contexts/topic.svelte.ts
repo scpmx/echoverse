@@ -9,9 +9,10 @@ type UIChat = {
   title: string;
   imageUrl: string;
   content: string;
+  address: string;
 };
 
-export class CatalogContext implements IContext {
+export class TopicContext implements IContext {
 
   private topic: Topic;
   private initialLoad: boolean;
@@ -45,6 +46,7 @@ export class CatalogContext implements IContext {
         title: chat.title,
         imageUrl: chat.imageUrl,
         content: chat.content,
+        address: chat.address
       }));
 
       this.chats.push(...cs);
@@ -55,6 +57,7 @@ export class CatalogContext implements IContext {
           title: chat.title,
           imageUrl: chat.imageUrl,
           content: chat.content,
+          address: chat.address
         }));
         this.chats.push(...cs);
       });

@@ -1,19 +1,19 @@
 <script lang="ts">
-  import NewChatModal from "./NewChatModal.svelte";
   import type { AppController } from "$lib/controller.svelte";
-  import type { CatalogContext } from "$lib/contexts/catalog.svelte";
+  import type { TopicContext } from "$lib/contexts/topic.svelte";
   import { onMount } from "svelte";
+  import NewChatModal from "../NewChatModal.svelte";
   
   type Props = {
     controller: AppController,
-    catalog: CatalogContext
+    topic: TopicContext
   };
 
-  let { controller, catalog }: Props = $props();
+  let { controller, topic }: Props = $props();
 
   onMount(async () => {
-    await controller.initContext(catalog);
-    await catalog.listen();
+    await controller.initContext(topic);
+    await topic.listen();
   })
 
 </script>
@@ -25,7 +25,7 @@
   <div
     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4"
   >
-    {#each catalog.chats as chat}
+    {#each topic.chats as chat}
       <div class="card bg-base-100 shadow-xl">
         <figure>
           <img src={chat.imageUrl} alt="Chat" />
@@ -38,7 +38,7 @@
           <div class="card-actions justify-end">
             <button
               class="btn btn-primary"
-              onclick={async () => await controller.showChat(catalog.getTicker(), chat.id)}
+              onclick={async () => await controller.openChat(chat.address)}
             >
               Read Now
             </button>
@@ -46,6 +46,6 @@
         </div>
       </div>
     {/each}
-    <NewChatModal {catalog} />
+    <NewChatModal {topic} />
   </div>
 </main>
