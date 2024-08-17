@@ -8,6 +8,7 @@ type UIMessage = {
   id: string;
   name?: string;
   content: string;
+  date: Date;
   fromSelf: boolean;
 };
 
@@ -38,10 +39,12 @@ export class ChatContext implements IContext {
         id: x.id,
         name: x.name,
         content: x.content,
+        date: new Date(x.date),
         fromSelf: x.from == this.signKey
       }));
 
       this.messages.push(...initialMessages);
+      this.messages = this.messages.sort((a, b) => a.date.getTime() - b.date.getTime());
 
       // Then subscribe to new changes
       this.chat.messages.events.addEventListener("change", (event) => {
@@ -49,11 +52,13 @@ export class ChatContext implements IContext {
           id: x.id,
           name: x.name,
           content: x.content,
+          date: new Date(x.date),
           fromSelf: x.from == this.signKey,
         }));
 
         // Todo: more sophisticated way of handling duplicates
         this.messages.push(...newMessages);
+        this.messages = this.messages.sort((a, b) => a.date.getTime() - b.date.getTime());
       });
     }
   }
@@ -81,7 +86,7 @@ export class ChatContext implements IContext {
 
   async addMessage(content: string, name: string) {
     await this.chat.messages.put(
-      new Message(this.signKey, new Date().toDateString(), content, name)
+      new Message(this.signKey, new Date().toISOString(), content, name)
     );
   }
 

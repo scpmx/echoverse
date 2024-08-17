@@ -72,16 +72,6 @@ export class TopicContext implements IContext {
     }
   }
 
-  async getChat(chatId: string): Promise<Chat> {
-    var [chat] = await this.topic.chats.index.search(
-      new SearchRequest({
-        query: [new StringMatch({ key: "id", value: chatId })],
-      })
-    );
-
-    return chat;
-  }
-
   async createChat(
     ticker: string,
     title: string,
@@ -93,7 +83,7 @@ export class TopicContext implements IContext {
       v4(),
       this.signKey,
       ticker,
-      new Date().toDateString(),
+      new Date().toISOString(),
       title,
       imageUrl,
       content,

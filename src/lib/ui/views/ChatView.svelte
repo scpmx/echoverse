@@ -28,6 +28,10 @@
     <div class="flex-grow overflow-y-scroll">
       {#each chat.messages as message}
         <div class="chat {message.fromSelf ? 'chat-end' : 'chat-start'}">
+          <div class="chat-header">
+            {message.name}
+            <time class="text-xs opacity-50">{message.date.toLocaleTimeString()}</time>
+          </div>
           <div class="chat-bubble">
             <div class="max-w-96">
               {message.content}
