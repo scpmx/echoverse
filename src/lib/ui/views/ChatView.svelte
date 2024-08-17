@@ -27,7 +27,7 @@
   <div class="flex flex-col h-full">
     <div class="flex-grow overflow-y-scroll">
       {#each chat.messages as message}
-        <div class="chat {true ? 'chat-end' : 'chat-start'}">
+        <div class="chat {message.fromSelf ? 'chat-end' : 'chat-start'}">
           <div class="chat-bubble">
             <div class="max-w-96">
               {message.content}

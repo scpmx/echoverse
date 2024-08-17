@@ -1,5 +1,6 @@
 import { Chat, type Topic } from "$lib/database";
 import type { IContext } from "$lib/interfaces/IContext";
+import type { PublicSignKey } from "@peerbit/crypto";
 import { SearchRequest, StringMatch } from "@peerbit/document";
 import type { Peerbit } from "peerbit";
 import { v4 } from "uuid";
@@ -14,23 +15,27 @@ type UIChat = {
 };
 
 export class TopicContext implements IContext {
-
   private topic: Topic;
+  private signKey: PublicSignKey;
   private initialLoad: boolean;
   private opened: boolean;
 
   chats = $state<UIChat[]>([]);
 
-  constructor(topic: Topic) {
+  constructor(
+    topic: Topic, 
+    signKey: PublicSignKey
+  ) {
     this.topic = topic;
+    this.signKey = signKey;
     this.initialLoad = true;
     this.opened = false;
   }
 
   async open(peer: Peerbit): Promise<void> {
-    if (!this.opened){
-        this.opened = true;
-        await peer.open(this.topic);
+    if (!this.opened) {
+      this.opened = true;
+      await peer.open(this.topic);
     }
   }
 
@@ -48,7 +53,7 @@ export class TopicContext implements IContext {
         title: chat.title,
         imageUrl: chat.imageUrl,
         content: chat.content,
-        address: chat.address
+        address: chat.address,
       }));
 
       this.chats.push(...cs);
@@ -60,7 +65,7 @@ export class TopicContext implements IContext {
           title: chat.title,
           imageUrl: chat.imageUrl,
           content: chat.content,
-          address: chat.address
+          address: chat.address,
         }));
         this.chats.push(...cs);
       });
@@ -68,7 +73,6 @@ export class TopicContext implements IContext {
   }
 
   async getChat(chatId: string): Promise<Chat> {
-
     var [chat] = await this.topic.chats.index.search(
       new SearchRequest({
         query: [new StringMatch({ key: "id", value: chatId })],
@@ -85,7 +89,16 @@ export class TopicContext implements IContext {
     content: string,
     name: string
   ): Promise<string> {
-    var chat = new Chat(v4(), ticker, new Date().toDateString(), title, imageUrl, content, name)
+    var chat = new Chat(
+      v4(),
+      this.signKey,
+      ticker,
+      new Date().toDateString(),
+      title,
+      imageUrl,
+      content,
+      name
+    );
     await this.topic.chats.put(chat);
     return chat.address;
   }

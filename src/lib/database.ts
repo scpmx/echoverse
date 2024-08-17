@@ -11,6 +11,9 @@ export class Message {
     @field({ type: "string" })
     id: string;
 
+    @field({ type: PublicSignKey })
+    from: PublicSignKey;
+
     @field({ type: option("string") })
     name?: string;
 
@@ -21,11 +24,13 @@ export class Message {
     content: string;
 
     constructor(
+        from: PublicSignKey,
         date: string,
         content: string,
         name?: string
     ) {
         this.id = uuid();
+        this.from = from;
         this.name = name;
         this.date = date;
         this.content = content;
@@ -37,6 +42,9 @@ export class Chat extends Program {
 
     @field({ type: "string" })
     id: string;
+
+    @field({ type: PublicSignKey })
+    creator: PublicSignKey;
 
     @field({ type: "string" })
     ticker: string;
@@ -61,6 +69,7 @@ export class Chat extends Program {
 
     constructor(
         id: string,
+        creator: PublicSignKey,
         ticker: string,
         date: string,
         title: string,
@@ -70,6 +79,7 @@ export class Chat extends Program {
     ) {
         super();
         this.id = id;
+        this.creator = creator;
         this.ticker = ticker;
         this.date = date;
         this.name = name;
@@ -101,6 +111,9 @@ export class IndexableChat {
     @field({ type: "string" })
     id: string;
 
+    @field({ type: PublicSignKey })
+    creator: PublicSignKey;
+
     @field({ type: "string" })
     ticker: string;
 
@@ -124,6 +137,7 @@ export class IndexableChat {
 
     constructor(
         id: string,
+        creator: PublicSignKey,
         ticker: string,
         date: string,
         imageUrl: string,
@@ -133,6 +147,7 @@ export class IndexableChat {
         name?: string,
     ) {
         this.id = id;
+        this.creator = creator;
         this.ticker = ticker;
         this.date = date;
         this.name = name;
@@ -182,6 +197,7 @@ export class Topic extends Program {
                 transform: async (thread, _) => {
                     return new IndexableChat(
                         thread.id,
+                        thread.creator,
                         thread.ticker,
                         thread.date,
                         thread.imageUrl, 

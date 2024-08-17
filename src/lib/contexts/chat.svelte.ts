@@ -1,5 +1,6 @@
 import { Message, type Chat } from "$lib/database";
 import type { IContext } from "$lib/interfaces/IContext";
+import type { PublicSignKey } from "@peerbit/crypto";
 import { SearchRequest } from "@peerbit/document";
 import type { Peerbit } from "peerbit";
 
@@ -14,9 +15,14 @@ export class ChatContext implements IContext {
   private chat: Chat;
   private initialLoad: boolean;
   private opened: boolean;
+  private signKey: PublicSignKey;
 
-  constructor(chat: Chat) {
+  constructor(
+    chat: Chat,
+    signKey: PublicSignKey
+  ) {
     this.chat = chat;
+    this.signKey = signKey;
     this.initialLoad = true;
     this.opened = false;
   }
@@ -32,7 +38,7 @@ export class ChatContext implements IContext {
         id: x.id,
         name: x.name,
         content: x.content,
-        fromSelf: false,
+        fromSelf: x.from == this.signKey
       }));
 
       this.messages.push(...initialMessages);
@@ -43,7 +49,7 @@ export class ChatContext implements IContext {
           id: x.id,
           name: x.name,
           content: x.content,
-          fromSelf: false,
+          fromSelf: x.from == this.signKey,
         }));
 
         // Todo: more sophisticated way of handling duplicates
@@ -75,7 +81,7 @@ export class ChatContext implements IContext {
 
   async addMessage(content: string, name: string) {
     await this.chat.messages.put(
-      new Message(new Date().toDateString(), content, name)
+      new Message(this.signKey, new Date().toDateString(), content, name)
     );
   }
 

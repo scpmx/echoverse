@@ -51,7 +51,7 @@ export class AppController {
 
       for (let i = 0; i < openTopics.length; i++) {
         var topic = await this.peer.open(openTopics[i])
-        var context = new TopicContext(topic);
+        var context = new TopicContext(topic, this.peer.identity.publicKey);
         this.topics.set(topic.ticker, context);
       }
   }
@@ -65,7 +65,7 @@ export class AppController {
 
     if (!chatContext) {
       var chat = await this.peer.open<Chat>(address);
-      chatContext = new ChatContext(chat);
+      chatContext = new ChatContext(chat, this.peer.identity.publicKey);
       this.chats.set(address, chatContext);
     }
 
@@ -79,7 +79,7 @@ export class AppController {
       let topic = topicsByTicker.get(ticker);
       if (topic) {
         await this.peer.open(topic);
-        topicContext = new TopicContext(topic);
+        topicContext = new TopicContext(topic, this.peer.identity.publicKey);
         this.topics.set(ticker, topicContext);
       }
     }
