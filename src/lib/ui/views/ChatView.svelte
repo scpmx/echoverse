@@ -20,6 +20,10 @@
 
 </script>
 
+<svelte:head>
+  <title>/{chat.ticker}/ {chat.title}</title>
+</svelte:head>
+
 <div class="p-4 bg-base-200 border-b border-base-300">
   <h1 class="text-xl font-bold">{chat.title}</h1>
 </div>

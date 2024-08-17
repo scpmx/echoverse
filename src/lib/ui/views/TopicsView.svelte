@@ -10,8 +10,12 @@
 
 </script>
 
+<svelte:head>
+  <title>Echoverse</title>
+</svelte:head>
+
 <div class="p-4 bg-base-200 border-b border-base-300">
-  <h1 class="text-xl font-bold">Boards</h1>
+  <h1 class="text-xl font-bold">Topics</h1>
 </div>
 
 <main
