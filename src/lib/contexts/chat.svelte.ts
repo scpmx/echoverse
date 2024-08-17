@@ -13,10 +13,12 @@ type UIMessage = {
 };
 
 export class ChatContext implements IContext {
+
   private chat: Chat;
   private initialLoad: boolean;
   private opened: boolean;
   private signKey: PublicSignKey;
+  private seenMessages: Set<string>;
 
   constructor(
     chat: Chat,
@@ -26,14 +28,16 @@ export class ChatContext implements IContext {
     this.signKey = signKey;
     this.initialLoad = true;
     this.opened = false;
+    this.seenMessages = new Set<string>();
   }
 
   messages = $state<UIMessage[]>([]);
 
   async listen() {
-    // On initial load, download all messages from db
+
     if (this.initialLoad) {
       this.initialLoad = false;
+
       var ms = await this.chat.messages.index.search(new SearchRequest());
       var initialMessages = ms.map((x) => ({
         id: x.id,
@@ -43,11 +47,16 @@ export class ChatContext implements IContext {
         fromSelf: x.from == this.signKey
       }));
 
+      initialMessages
+        .map(x => x.id)
+        .forEach(this.seenMessages.add);
+
       this.messages.push(...initialMessages);
       this.messages = this.messages.sort((a, b) => a.date.getTime() - b.date.getTime());
 
       // Then subscribe to new changes
       this.chat.messages.events.addEventListener("change", (event) => {
+
         var newMessages = event.detail.added.map((x) => ({
           id: x.id,
           name: x.name,
@@ -56,8 +65,12 @@ export class ChatContext implements IContext {
           fromSelf: x.from == this.signKey,
         }));
 
-        // Todo: more sophisticated way of handling duplicates
-        this.messages.push(...newMessages);
+        for (let i = 0; i < newMessages.length; i++) {
+          let msg = newMessages[i];
+          if (!this.seenMessages.has(msg.id)) {
+            this.messages.push(msg)
+          }
+        }
         this.messages = this.messages.sort((a, b) => a.date.getTime() - b.date.getTime());
       });
     }
