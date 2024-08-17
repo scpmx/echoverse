@@ -1,7 +1,7 @@
 <script lang="ts">
   import "../app.css";
   import { Peerbit } from "peerbit";
-  import App from "$lib/components/App.svelte";
+  import App from "$lib/ui/App.svelte";
   import { AppController } from "$lib/controller.svelte";
 
   async function init() {

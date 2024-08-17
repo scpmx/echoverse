@@ -2,7 +2,7 @@
   import type { AppController } from "$lib/controller.svelte";
   import type { TopicContext } from "$lib/contexts/topic.svelte";
   import { onMount } from "svelte";
-  import NewChatModal from "../NewChatModal.svelte";
+  import NewChatModal from "../components/NewChatModal.svelte";
   
   type Props = {
     controller: AppController,

@@ -2,7 +2,7 @@
   import TopicView from "./views/TopicView.svelte";
   import ChatView from "./views/ChatView.svelte";
   import TopicsView from "./views/TopicsView.svelte";
-  import Sidebar from "./Sidebar.svelte";
+  import SidebarView from "./views/SidebarView.svelte";
   import type { AppController } from "$lib/controller.svelte";
   import { onMount } from "svelte";
   
@@ -20,7 +20,7 @@
 
 <div class="flex h-screen">
   <div class="w-96 flex-col hidden md:flex">
-    <Sidebar {controller} context={controller.sidebarContext} />
+    <SidebarView {controller} context={controller.sidebarContext} />
   </div>
   <div class="flex-1 flex flex-col">
     {#if controller.mainContent.route == "chat"}

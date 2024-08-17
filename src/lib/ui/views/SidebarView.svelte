@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { AppController } from "$lib/controller.svelte";
   import { onMount } from "svelte";
-  import CollapsibleThreadList from "./CollapsibleThreadList.svelte";
   import type { SidebarContext } from "$lib/contexts/sidebar.svelte";
+  import CollapsibleThreadList from "../components/CollapsibleThreadList.svelte";
 
   type Props = {
     controller: AppController;
