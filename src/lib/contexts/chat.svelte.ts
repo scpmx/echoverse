@@ -49,7 +49,7 @@ export class ChatContext implements IContext {
 
       initialMessages
         .map(x => x.id)
-        .forEach(this.seenMessages.add);
+        .forEach(x => this.seenMessages.add(x));
 
       this.messages.push(...initialMessages);
       this.messages = this.messages.sort((a, b) => a.date.getTime() - b.date.getTime());
@@ -106,7 +106,11 @@ export class ChatContext implements IContext {
   async open(peer: Peerbit): Promise<void> {
     if (!this.opened) {
       this.opened = true;
+
       await peer.open(this.chat);
+
+      // TODO: either make listen private or just move the implementation here
+      await this.listen();
     }
   }
 }

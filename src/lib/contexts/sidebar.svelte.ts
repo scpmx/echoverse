@@ -80,6 +80,9 @@ export class SidebarContext implements IContext {
     if (!this.opened) {
       this.opened = true;
       await peer.open(this.sidebar);
+
+      // TODO: Either make listen private or move it to this method
+      await this.listen();
     }
   }
 

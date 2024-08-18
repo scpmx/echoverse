@@ -11,11 +11,6 @@
 
   let { controller, topic }: Props = $props();
 
-  onMount(async () => {
-    await controller.initContext(topic);
-    await topic.listen();
-  })
-
 </script>
 
 <svelte:head>

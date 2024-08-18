@@ -11,10 +11,6 @@
 
   let { controller, context }: Props = $props();
 
-  onMount(async () => {
-    await controller.initContext(context);
-    await context.listen();
-  });
 </script>
 
 <div class="p-4 bg-base-200 border-b border-base-300">

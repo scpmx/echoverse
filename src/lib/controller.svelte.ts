@@ -54,6 +54,8 @@ export class AppController {
         var context = new TopicContext(topic, this.peer.identity.publicKey);
         this.topics.set(topic.ticker, context);
       }
+
+      await this.sidebarContext.open(this.peer);
   }
 
   async initContext(context: IContext) {
@@ -69,6 +71,7 @@ export class AppController {
       this.chats.set(address, chatContext);
     }
 
+    await chatContext.open(this.peer);
     this.mainContent = { route: "chat", chat: chatContext }
   }
 
@@ -84,11 +87,13 @@ export class AppController {
       }
     }
 
-    if (topicContext) {
-      this.mainContent = { route: "topic", topic: topicContext }
-    } else {
+    if (!topicContext) {
       console.error(`Topic '${ticker}' does not exist`);
+      return;
     }
+
+    await topicContext.open(this.peer);
+    this.mainContent = { route: "topic", topic: topicContext }
   }
 
   showTopics() {

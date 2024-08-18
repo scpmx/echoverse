@@ -36,6 +36,9 @@ export class TopicContext implements IContext {
     if (!this.opened) {
       this.opened = true;
       await peer.open(this.topic);
+
+      // TODO: Either make listen private or move it to this method
+      await this.listen();
     }
   }
 

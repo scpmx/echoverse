@@ -10,12 +10,6 @@
 
   let { controller, chat }: Props = $props();
 
-  onMount(async () => {
-    await controller.initContext(chat);
-    await chat.listen();
-    await controller.sidebarContext.add(chat.ticker, chat.title, chat.address);
-  });
-
   let input = $state("");
 
 </script>
