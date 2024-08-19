@@ -1,8 +1,7 @@
 <script lang="ts">
   import type { ChatContext } from "$lib/contexts/chat.svelte";
   import type { AppController } from "$lib/controller.svelte";
-  import { onMount } from "svelte";
-  
+    
   type Props = {
     controller: AppController,
     chat: ChatContext
