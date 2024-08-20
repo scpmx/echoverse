@@ -36,7 +36,7 @@
           <div class="card-actions justify-end">
             <button
               class="btn btn-primary"
-              onclick={async () => await controller.openChat(chat.address)}
+              onclick={async () => await controller.openChat(chat)}
             >
               Read Now
             </button>

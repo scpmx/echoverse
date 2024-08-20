@@ -1,5 +1,4 @@
 import { Message, type Chat } from "$lib/database";
-import type { IContext } from "$lib/interfaces/IContext";
 import type { PublicSignKey } from "@peerbit/crypto";
 import { SearchRequest } from "@peerbit/document";
 import type { Peerbit } from "peerbit";
@@ -12,7 +11,7 @@ type UIMessage = {
   fromSelf: boolean;
 };
 
-export class ChatContext implements IContext {
+export class ChatContext {
 
   private chat: Chat;
   private initialLoad: boolean;

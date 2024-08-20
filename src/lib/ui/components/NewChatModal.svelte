@@ -17,7 +17,7 @@
 
   async function sumbit() {
     var address = await topic.createChat(topic.ticker, title, imageUrl, content, name);
-    await controller.openChat(address);
+    await controller.loadChatFromAddress(address);
     showModal = false;
     imageUrl = "";
     title = "";

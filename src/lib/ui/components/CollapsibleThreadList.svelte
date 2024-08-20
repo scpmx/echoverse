@@ -22,7 +22,7 @@
     <div class="p-4 rounded-b">
       {#each chats as chat}
         <button
-          onclick={async () => controller.openChat(chat.address)} 
+          onclick={async () => controller.loadChatFromAddress(chat.address)} 
           class="btn btn-link {chat.hasUnreadMessages
             ? 'font-bold'
             : 'font-light'}"

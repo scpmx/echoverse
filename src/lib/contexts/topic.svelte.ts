@@ -1,26 +1,14 @@
 import { Chat, type Topic } from "$lib/database";
-import type { IContext } from "$lib/interfaces/IContext";
 import type { PublicSignKey } from "@peerbit/crypto";
 import { SearchRequest, StringMatch } from "@peerbit/document";
-import type { Peerbit } from "peerbit";
 import { v4 } from "uuid";
 
-type UIChat = {
-  id: string;
-  ticker: string;
-  title: string;
-  imageUrl: string;
-  content: string;
-  address: string;
-};
-
-export class TopicContext implements IContext {
+export class TopicContext {
   private topic: Topic;
   private signKey: PublicSignKey;
   private initialLoad: boolean;
-  private opened: boolean;
 
-  chats = $state<UIChat[]>([]);
+  chats = $state<Chat[]>([]);
 
   constructor(
     topic: Topic, 
@@ -29,17 +17,6 @@ export class TopicContext implements IContext {
     this.topic = topic;
     this.signKey = signKey;
     this.initialLoad = true;
-    this.opened = false;
-  }
-
-  async open(peer: Peerbit): Promise<void> {
-    if (!this.opened) {
-      this.opened = true;
-      await peer.open(this.topic);
-
-      // TODO: Either make listen private or move it to this method
-      await this.listen();
-    }
   }
 
   async listen() {
@@ -50,27 +27,10 @@ export class TopicContext implements IContext {
         new SearchRequest()
       );
 
-      let cs = initialChats.map((chat) => ({
-        id: chat.id,
-        ticker: chat.ticker,
-        title: chat.title,
-        imageUrl: chat.imageUrl,
-        content: chat.content,
-        address: chat.address,
-      }));
-
-      this.chats.push(...cs);
+      this.chats.push(...initialChats);
 
       this.topic.chats.events.addEventListener("change", (event) => {
-        let cs = event.detail.added.map((chat) => ({
-          id: chat.id,
-          ticker: chat.ticker,
-          title: chat.title,
-          imageUrl: chat.imageUrl,
-          content: chat.content,
-          address: chat.address,
-        }));
-        this.chats.push(...cs);
+        this.chats.push(...event.detail.added);
       });
     }
   }

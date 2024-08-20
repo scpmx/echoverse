@@ -24,7 +24,7 @@
   {#each topics as topic}
     <button
       class="btn btn-outline flex flex-col items-center p-4"
-      onclick={async () => await controller.openTopic(topic.ticker) }
+      onclick={async () => await controller.openTopic(topic)}
     >
       <span class="text-lg font-bold">{topic.ticker.toUpperCase()}</span>
       <span class="text-sm">{topic.name}</span>

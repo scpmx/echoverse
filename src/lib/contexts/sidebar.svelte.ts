@@ -1,5 +1,4 @@
 import { PinnedChat, type Sidebar } from "$lib/database";
-import type { IContext } from "$lib/interfaces/IContext";
 import { SearchRequest } from "@peerbit/document";
 import type { Peerbit } from "peerbit";
 
@@ -11,7 +10,7 @@ export type SidebarChat = {
   hasUnreadMessages: boolean;
 };
 
-export class SidebarContext implements IContext {
+export class SidebarContext {
     
   chats = $state<SidebarChat[]>([]);
 
