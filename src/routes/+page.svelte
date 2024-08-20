@@ -10,6 +10,8 @@
       directory: "./test8"
     });
 
+    await peer.bootstrap();
+
     return new AppController(peer);
   }
 

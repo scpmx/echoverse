@@ -25,10 +25,10 @@ export class AppController {
 
   private peer: Peerbit;
 
-  // Ticker to catalog context
+  // Address to catalog context
   private topics: Map<string, TopicContext>;
 
-  // address to chat context
+  // Address to chat context
   private chats: Map<string, ChatContext>;
 
   mainContent = $state<AppView>({ route: "topics" });
@@ -82,7 +82,7 @@ export class AppController {
 
   async openChat(chat: Chat): Promise<void> {
 
-    // Is there really no way to tell if a  chat is open without throwing an exception?
+    // Is there really no way to tell if a chat is open without throwing an exception?
     try {
       await this.peer.open(chat);
     } catch {
