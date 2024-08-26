@@ -5,7 +5,6 @@ import type { Peerbit } from "peerbit";
 
 type UIMessage = {
   id: string;
-  name?: string;
   content: string;
   date: Date;
   fromSelf: boolean;
@@ -40,7 +39,6 @@ export class ChatContext {
       var ms = await this.chat.messages.index.search(new SearchRequest());
       var initialMessages = ms.map((x) => ({
         id: x.id,
-        name: x.name,
         content: x.content,
         date: new Date(x.date),
         fromSelf: x.from == this.signKey
@@ -58,7 +56,6 @@ export class ChatContext {
 
         var newMessages = event.detail.added.map((x) => ({
           id: x.id,
-          name: x.name,
           content: x.content,
           date: new Date(x.date),
           fromSelf: x.from == this.signKey,
@@ -96,9 +93,9 @@ export class ChatContext {
     return this.chat.address;
   }
 
-  async addMessage(content: string, name: string) {
+  async addMessage(content: string) {
     await this.chat.messages.put(
-      new Message(this.signKey, new Date().toISOString(), content, name)
+      new Message(this.signKey, new Date().toISOString(), content)
     );
   }
 

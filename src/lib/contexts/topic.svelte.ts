@@ -39,8 +39,7 @@ export class TopicContext {
     ticker: string,
     title: string,
     imageUrl: string,
-    content: string,
-    name: string
+    content: string
   ): Promise<string> {
     var chat = new Chat(
       v4(),
@@ -49,8 +48,7 @@ export class TopicContext {
       new Date().toISOString(),
       title,
       imageUrl,
-      content,
-      name
+      content
     );
     await this.topic.chats.put(chat);
     return chat.address;
