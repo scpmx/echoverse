@@ -148,16 +148,21 @@ export class Topic extends Program {
     @field({ type: "string" })
     name: string;
 
+    @field({ type: "string" })
+    category: string;
+
     @field({ type: Documents })
     chats: Documents<Chat, IndexableChat>;
 
     constructor(
         ticker: string,
-        name: string
+        name: string,
+        category: string
     ) {
         super();
         this.ticker = ticker;
         this.name = name;
+        this.category = category;
         this.chats =
             new Documents<Chat, IndexableChat>({
                 id: sha256Sync(
