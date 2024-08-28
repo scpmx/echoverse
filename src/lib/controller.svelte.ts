@@ -58,18 +58,16 @@ export class AppController {
   }
 
   async loadChatFromAddress(address: string): Promise<void> {
-
     var chatContext = this.chats.get(address);
 
     if (!chatContext) {
-
       try {
-        // The chat may not exist anymore, which would mean this should throw
-        // an exception. In that case, we should remove the chat from the sidebar.
-        // It remains to be seen if the sidebar is the only place this will be used from
         var chat = await this.peer.open<Chat>(address);
         chatContext = new ChatContext(chat, this.peer.identity.publicKey);
         this.chats.set(chat.address, chatContext);
+        
+        // Add the chat to the sidebar
+        await this.sidebarContext.add(chat.ticker, chat.title, chat.address);
       } catch (ex) {
         console.error(ex);
         return;
@@ -81,8 +79,6 @@ export class AppController {
   }
 
   async openChat(chat: Chat): Promise<void> {
-
-    // Is there really no way to tell if a chat is open without throwing an exception?
     try {
       await this.peer.open(chat);
     } catch {
@@ -94,6 +90,9 @@ export class AppController {
     if (!chatContext) {
       chatContext = new ChatContext(chat, this.peer.identity.publicKey);
       this.chats.set(chat.address, chatContext);
+      
+      // Add the chat to the sidebar
+      await this.sidebarContext.add(chat.ticker, chat.title, chat.address);
     }
 
     await chatContext.listen();
