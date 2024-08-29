@@ -46,8 +46,11 @@
       {#each chat.messages as message}
         <div class="chat {message.fromSelf ? 'chat-end' : 'chat-start'}">
           <div class="chat-header">
-            <span>{message.identifier}</span>
-            <time class="text-xs opacity-50">{message.date.toLocaleTimeString()}</time>
+            <span class="text-xs opacity-50">{message.identifier}</span>
+            <span class="mx-2">|</span>
+            <span class="text-xs opacity-50">{message.messageIdentifier}</span>
+            <span class="mx-2">|</span>
+            <time class="text-xs opacity-50">{message.date.toLocaleDateString()} {message.date.toLocaleTimeString()}</time>
           </div>
           <div class="chat-bubble">
             <div class="max-w-96">

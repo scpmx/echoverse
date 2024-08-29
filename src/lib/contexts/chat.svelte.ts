@@ -8,6 +8,7 @@ type UIMessage = {
   date: Date;
   fromSelf: boolean;
   identifier: string;
+  messageIdentifier: string;
 };
 
 export class ChatContext {
@@ -39,6 +40,7 @@ export class ChatContext {
           x.from,
           this.chat.date
         ),
+        messageIdentifier: this.generateMessageIdentifier(x.id),
       }));
 
       initialMessages.forEach((x) => this.seenMessages.add(x.id));
@@ -59,6 +61,7 @@ export class ChatContext {
             x.from,
             this.chat.date
           ),
+          messageIdentifier: this.generateMessageIdentifier(x.id),
         }));
 
         for (let i = 0; i < newMessages.length; i++) {
@@ -99,6 +102,8 @@ export class ChatContext {
     const date = new Date();
     const message = new Message(this.signKey, date.toISOString(), content);
     await this.chat.messages.put(message);
+    // The messageIdentifier will be generated when the message is added to the UI
+    // through the "change" event listener in the listen() method
   }
 
   private cyrb128(str: string) {
@@ -155,6 +160,15 @@ export class ChatContext {
     }
 
     return this.byteArrayToCustomAsciiString(Array.from(selectedBytes));
+  }
+
+  private generateMessageIdentifier(messageId: string): string {
+    if (messageId.length < 8) {
+      // If the messageId is shorter than 8 characters, return the whole string
+      return messageId;
+    }
+    // Return the first 4 and last 4 characters of the messageId
+    return messageId.slice(0, 4) + messageId.slice(-4);
   }
 
   private byteArrayToCustomAsciiString(byteArray: number[]): string {
