@@ -35,9 +35,15 @@
 </script>
 
 {#await init()}
-  <p>Loading...</p>
+  <div class="flex flex-col items-center justify-center h-screen bg-base-200">
+    <div class="w-16 h-16 border-4 border-primary border-solid rounded-full animate-spin border-t-transparent"></div>
+    <p class="mt-4 text-lg font-semibold text-primary">Loading Echoverse...</p>
+    <progress class="progress progress-primary w-56 mt-4"></progress>
+  </div>
 {:then controller}
   <App {controller} />
 {:catch ex}
-  <p>{ex.message}</p>
+  <div class="flex flex-col items-center justify-center h-screen bg-base-200">
+    <p class="text-error text-lg">{ex.message}</p>
+  </div>
 {/await}
