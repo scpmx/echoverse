@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { ChatContext } from "$lib/contexts/chat.svelte";
   import type { AppController } from "$lib/controller.svelte";
-    
+  import MessageContentPreview from "../components/MessageContentPreview.svelte";
+      
   type Props = {
     controller: AppController,
     chat: ChatContext
@@ -24,6 +25,11 @@
       scrollToBottom();
     }
   });
+
+  function extractUrls(text: string): string[] {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.match(urlRegex) || [];
+  }
   
 </script>
 
@@ -49,6 +55,13 @@
             </div>
           </div>
         </div>
+        {#each extractUrls(message.content) as url}
+          <div class="chat {message.fromSelf ? 'chat-end' : 'chat-start'}">
+            <div class="chat-bubble">
+              <MessageContentPreview {url} />
+            </div>
+          </div>
+        {/each}
       {/each}
     </div>
     <div class="flex items-center p-4 rounded-lg shadow">
