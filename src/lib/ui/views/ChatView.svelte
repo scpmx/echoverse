@@ -11,6 +11,20 @@
 
   let input = $state("");
 
+  let messageContainer: HTMLDivElement;
+
+  function scrollToBottom() {
+    if (messageContainer) {
+      messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
+  }
+
+  $effect(() => {
+    if (chat.messages.length) {
+      scrollToBottom();
+    }
+  });
+  
 </script>
 
 <svelte:head>
@@ -22,7 +36,7 @@
 </div>
 <main class="relative flex-1 overflow-y-auto">
   <div class="flex flex-col h-full">
-    <div class="flex-grow overflow-y-scroll">
+    <div class="flex-grow overflow-y-scroll" bind:this={messageContainer}>
       {#each chat.messages as message}
         <div class="chat {message.fromSelf ? 'chat-end' : 'chat-start'}">
           <div class="chat-header">
@@ -45,7 +59,10 @@
       ></textarea>
       <button
         class="btn btn-accent m-4"
-        onclick={async () => chat.addMessage(input) }
+        onclick={async () => {
+          chat.addMessage(input);
+          input = '';
+        }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
