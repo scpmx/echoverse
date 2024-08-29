@@ -44,34 +44,36 @@
   <div class="flex flex-col h-full">
     <div class="flex-grow overflow-y-scroll" bind:this={messageContainer}>
       {#each chat.messages as message}
-        <div class="chat {message.fromSelf ? 'chat-end' : 'chat-start'}">
-          <div class="chat-header">
-            <span class="text-xs opacity-50">{message.identifier}</span>
-            <span class="mx-2">|</span>
+        <div class="flex flex-col p-2">
+          <div class="flex items-center mb-1">
+            <span class="font-bold mr-2">{message.identifier}</span>
             <span class="text-xs opacity-50">{message.messageIdentifier}</span>
             <span class="mx-2">|</span>
             <time class="text-xs opacity-50">{message.date.toLocaleDateString()} {message.date.toLocaleTimeString()}</time>
           </div>
-          <div class="chat-bubble">
-            <div class="max-w-96">
-              {message.content}
-            </div>
+          <div class="break-words whitespace-pre-wrap">
+            {#each message.content.split('\n') as line}
+              {#if line.startsWith('>')}
+                <span class="text-green-500">{line}</span><br>
+              {:else}
+                {line}<br>
+              {/if}
+            {/each}
           </div>
         </div>
         {#each extractUrls(message.content) as url}
-          <div class="chat {message.fromSelf ? 'chat-end' : 'chat-start'}">
-            <div class="chat-bubble">
-              <MessageContentPreview {url} />
-            </div>
+          <div class="p-2 {message.fromSelf ? 'bg-base-200' : 'bg-base-100'}">
+            <MessageContentPreview {url} />
           </div>
         {/each}
       {/each}
     </div>
     <div class="flex items-center p-4 rounded-lg shadow">
       <textarea
-        class="flex-1 resize-nonep-2 rounded-lg border focus:outline-none focus:ring-2"
+        class="flex-1 resize-none p-2 rounded-lg border focus:outline-none focus:ring-2"
         placeholder="Type your reply..."
         bind:value={input}
+        rows="3"
       ></textarea>
       <button
         class="btn btn-accent m-4"
