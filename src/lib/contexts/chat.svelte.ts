@@ -1,7 +1,6 @@
 import { Message, type Chat } from "$lib/database";
 import type { PublicSignKey } from "@peerbit/crypto";
 import { SearchRequest } from "@peerbit/document";
-import type { Peerbit } from "peerbit";
 
 type UIMessage = {
   id: string;
@@ -14,7 +13,6 @@ type UIMessage = {
 export class ChatContext {
   private chat: Chat;
   private initialLoad: boolean;
-  private opened: boolean;
   private signKey: PublicSignKey;
   private seenMessages: Set<string>;
 
@@ -22,7 +20,6 @@ export class ChatContext {
     this.chat = chat;
     this.signKey = signKey;
     this.initialLoad = true;
-    this.opened = false;
     this.seenMessages = new Set<string>();
   }
 
@@ -39,8 +36,8 @@ export class ChatContext {
         date: new Date(x.date),
         fromSelf: x.from.hashcode() == this.signKey.hashcode(),
         identifier: this.generateIdentifier(
-          this.signKey,
-          new Date(this.chat.date)
+          x.from,
+          this.chat.date
         ),
       }));
 
@@ -59,8 +56,8 @@ export class ChatContext {
           date: new Date(x.date),
           fromSelf: x.from.hashcode() === this.signKey.hashcode(),
           identifier: this.generateIdentifier(
-            this.signKey,
-            new Date(this.chat.date)
+            x.from,
+            this.chat.date
           ),
         }));
 
@@ -104,17 +101,6 @@ export class ChatContext {
     await this.chat.messages.put(message);
   }
 
-  async open(peer: Peerbit): Promise<void> {
-    if (!this.opened) {
-      this.opened = true;
-
-      await peer.open(this.chat);
-
-      // TODO: either make listen private or just move the implementation here
-      await this.listen();
-    }
-  }
-
   private cyrb128(str: string) {
     let h1 = 1779033703,
       h2 = 3144134277,
@@ -151,8 +137,8 @@ export class ChatContext {
     };
   }
 
-  private generateIdentifier(publicKey: PublicSignKey, date: Date): string {
-    const seed = this.cyrb128(date.toISOString());
+  private generateIdentifier(publicKey: PublicSignKey, date: string): string {
+    const seed = this.cyrb128(date);
     const rand = this.sfc32(seed[0], seed[1], seed[2], seed[3]);
 
     const keyBytes = publicKey.bytes;
