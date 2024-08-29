@@ -12,17 +12,15 @@
   let imageUrl = $state("");
   let title = $state("");
   let content = $state("");
-  let name = $state("");
   let showModal = $state(false);
 
   async function sumbit() {
-    var address = await topic.createChat(topic.ticker, title, imageUrl, content, name);
+    var address = await topic.createChat(topic.ticker, title, imageUrl, content);
     await controller.loadChatFromAddress(address);
     showModal = false;
     imageUrl = "";
     title = "";
     content = "";
-    name = "";
   }
 
 </script>
@@ -35,20 +33,6 @@
   <div class="modal modal-open">
     <div class="modal-box">
       <h2 class="text-xl font-bold mb-4">Create New Chat</h2>
-
-      <!-- Optional Name Input -->
-      <div class="form-control mb-4">
-        <label for="name" class="label">
-          <span class="label-text">Name</span>
-        </label>
-        <input
-          id="name"
-          type="text"
-          class="input input-bordered"
-          bind:value={name}
-          placeholder="Anonymous"
-        />
-      </div>
 
       <!-- Image URL Input -->
       <div class="form-control mb-4">

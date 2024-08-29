@@ -7,15 +7,11 @@ import { concat } from "uint8arrays";
 
 @variant(0)
 export class Message {
-
     @field({ type: "string" })
     id: string;
 
     @field({ type: PublicSignKey })
     from: PublicSignKey;
-
-    @field({ type: option("string") })
-    name?: string;
 
     @field({ type: "string" })
     date: string;
@@ -26,12 +22,10 @@ export class Message {
     constructor(
         from: PublicSignKey,
         date: string,
-        content: string,
-        name?: string
+        content: string
     ) {
         this.id = uuid();
         this.from = from;
-        this.name = name;
         this.date = date;
         this.content = content;
     }
@@ -39,7 +33,6 @@ export class Message {
 
 @variant("chat")
 export class Chat extends Program {
-
     @field({ type: "string" })
     id: string;
 
@@ -48,9 +41,6 @@ export class Chat extends Program {
 
     @field({ type: "string" })
     ticker: string;
-
-    @field({ type: option("string") })
-    name?: string;
 
     @field({ type: "string" })
     date: string;
@@ -74,15 +64,13 @@ export class Chat extends Program {
         date: string,
         title: string,
         imageUrl: string,
-        content: string,
-        name?: string,
+        content: string
     ) {
         super();
         this.id = id;
         this.creator = creator;
         this.ticker = ticker;
         this.date = date;
-        this.name = name;
         this.title = title;
         this.imageUrl = imageUrl;
         this.content = content;
@@ -95,7 +83,6 @@ export class Chat extends Program {
                     ])
                 ),
             });
-
     }
 
     async open(): Promise<void> {
@@ -107,7 +94,6 @@ export class Chat extends Program {
 
 @variant(0)
 export class IndexableChat {
-
     @field({ type: "string" })
     id: string;
 
@@ -116,9 +102,6 @@ export class IndexableChat {
 
     @field({ type: "string" })
     ticker: string;
-
-    @field({ type: option("string") })
-    name?: string;
 
     @field({ type: "string" })
     date: string;
@@ -143,14 +126,12 @@ export class IndexableChat {
         imageUrl: string,
         title: string,
         message: string,
-        address: string,
-        name?: string,
+        address: string
     ) {
         this.id = id;
         this.creator = creator;
         this.ticker = ticker;
         this.date = date;
-        this.name = name;
         this.imageUrl = imageUrl;
         this.title = title;
         this.message = message;
@@ -167,16 +148,21 @@ export class Topic extends Program {
     @field({ type: "string" })
     name: string;
 
+    @field({ type: "string" })
+    category: string;
+
     @field({ type: Documents })
     chats: Documents<Chat, IndexableChat>;
 
     constructor(
         ticker: string,
-        name: string
+        name: string,
+        category: string
     ) {
         super();
         this.ticker = ticker;
         this.name = name;
+        this.category = category;
         this.chats =
             new Documents<Chat, IndexableChat>({
                 id: sha256Sync(
@@ -199,12 +185,11 @@ export class Topic extends Program {
                         thread.id,
                         thread.creator,
                         thread.ticker,
-                        thread.date,
+                        thread.date, 
                         thread.imageUrl, 
                         thread.title, 
                         thread.content, 
-                        await thread.calculateAddress(),
-                        thread.name
+                        await thread.calculateAddress()
                     )
                 }
             },

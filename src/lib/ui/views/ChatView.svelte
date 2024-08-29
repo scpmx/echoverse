@@ -26,7 +26,7 @@
       {#each chat.messages as message}
         <div class="chat {message.fromSelf ? 'chat-end' : 'chat-start'}">
           <div class="chat-header">
-            {message.name}
+            <span>{message.identifier}</span>
             <time class="text-xs opacity-50">{message.date.toLocaleTimeString()}</time>
           </div>
           <div class="chat-bubble">
@@ -45,7 +45,7 @@
       ></textarea>
       <button
         class="btn btn-accent m-4"
-        onclick={async () => chat.addMessage(input, "Anonymous") }
+        onclick={async () => chat.addMessage(input) }
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -23,24 +23,39 @@ export class TopicContext {
     if (this.initialLoad) {
       this.initialLoad = false;
 
-      let initialChats = await this.topic.chats.index.search(
-        new SearchRequest()
-      );
+      // Load all existing chats
+      await this.loadChats();
 
-      this.chats.push(...initialChats);
-
-      this.topic.chats.events.addEventListener("change", (event) => {
-        this.chats.push(...event.detail.added);
+      // Listen for new chats
+      this.topic.chats.events.addEventListener("change", async (event) => {
+        // Add new chats
+        for (const chat of event.detail.added) {
+          if (!this.chats.some(c => c.address === chat.address)) {
+            this.chats.push(chat);
+          }
+        }
+        // Remove deleted chats
+        for (const chat of event.detail.removed) {
+          this.chats = this.chats.filter(c => c.address !== chat.address);
+        }
       });
     }
+  }
+
+  async loadChats() {
+    // Clear existing chats
+    this.chats = [];
+
+    // Load all chats
+    const allChats = await this.topic.chats.index.search(new SearchRequest());
+    this.chats.push(...allChats);
   }
 
   async createChat(
     ticker: string,
     title: string,
     imageUrl: string,
-    content: string,
-    name: string
+    content: string
   ): Promise<string> {
     var chat = new Chat(
       v4(),
@@ -49,10 +64,11 @@ export class TopicContext {
       new Date().toISOString(),
       title,
       imageUrl,
-      content,
-      name
+      content
     );
     await this.topic.chats.put(chat);
+    // Add the new chat to the local array
+    this.chats.push(chat);
     return chat.address;
   }
 

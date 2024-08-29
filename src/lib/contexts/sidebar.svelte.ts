@@ -86,6 +86,10 @@ export class SidebarContext {
   }
 
   async add(ticker: string, title: string, address: string) {
-    await this.sidebar.chats.put(new PinnedChat(ticker, title, address));
+    // Check if the chat is already in the sidebar
+    const existingChat = this.chats.find(chat => chat.address === address);
+    if (!existingChat) {
+      await this.sidebar.chats.put(new PinnedChat(ticker, title, address));
+    }
   }
 }
