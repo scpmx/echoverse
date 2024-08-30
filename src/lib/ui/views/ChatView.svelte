@@ -2,6 +2,7 @@
   import type { ChatContext } from "$lib/contexts/chat.svelte";
   import type { AppController } from "$lib/controller.svelte";
   import MessageContentPreview from "../components/MessageContentPreview.svelte";
+  import MessageContextMenu from "../components/MessageContextMenu.svelte";
       
   type Props = {
     controller: AppController,
@@ -11,8 +12,8 @@
   let { controller, chat }: Props = $props();
 
   let input = $state("");
-
   let messageContainer: HTMLDivElement;
+  let contextMenu = $state({ visible: false, x: 0, y: 0, messageId: '' });
 
   function scrollToBottom() {
     if (messageContainer) {
@@ -30,7 +31,39 @@
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     return text.match(urlRegex) || [];
   }
-  
+
+  function openContextMenu(event: MouseEvent, messageId: string) {
+    event.preventDefault();
+    const rect = (event.target as HTMLElement).getBoundingClientRect();
+    contextMenu = {
+      visible: true,
+      x: event.clientX,
+      y: rect.bottom,
+      messageId
+    };
+  }
+
+  function handleContextMenuAction(event: CustomEvent) {
+    const { action } = event.detail;
+    const messageId = contextMenu.messageId;
+    
+    switch (action) {
+      case 'copy':
+        const message = chat.messages.find(m => m.id === messageId);
+        if (message) {
+          navigator.clipboard.writeText(message.content);
+        }
+        break;
+      case 'reply':
+        // Implement reply functionality
+        console.log('Reply to message:', messageId);
+        break;
+      case 'delete':
+        // Implement delete functionality
+        console.log('Delete message:', messageId);
+        break;
+    }
+  }
 </script>
 
 <svelte:head>
@@ -57,12 +90,20 @@
       
       <!-- Messages -->
       {#each chat.messages as message}
-        <div class="flex flex-col p-2">
+        <div class="group flex flex-col p-2 hover:bg-base-200 transition-colors duration-200">
           <div class="flex items-center mb-1">
-            <span class="font-bold mr-2">{message.identifier}</span>
-            <span class="text-xs opacity-50">{message.messageIdentifier}</span>
+            <span class="font-bold mr-2 font-mono">{message.identifier}</span>
+            <span class="text-xs opacity-50 font-mono">{message.messageIdentifier}</span>
             <span class="mx-2">|</span>
-            <time class="text-xs opacity-50">{message.date.toLocaleDateString()} {message.date.toLocaleTimeString()}</time>
+            <time class="text-xs opacity-50 font-mono">{message.date.toLocaleDateString()} {message.date.toLocaleTimeString()}</time>
+            <button 
+              class="ml-auto p-1 hover:bg-base-300 rounded invisible group-hover:visible transition-opacity duration-200"
+              onclick={(e) => openContextMenu(e, message.id)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+              </svg>
+            </button>
           </div>
           <div class="break-words whitespace-pre-wrap">
             {#each message.content.split('\n') as line}
@@ -75,7 +116,7 @@
           </div>
         </div>
         {#each extractUrls(message.content) as url}
-          <div class="p-2 {message.fromSelf ? 'bg-base-200' : 'bg-base-100'}">
+          <div class="p-2">
             <MessageContentPreview {url} />
           </div>
         {/each}
@@ -113,3 +154,10 @@
     </div>
   </div>
 </main>
+
+<MessageContextMenu
+  bind:visible={contextMenu.visible}
+  x={contextMenu.x}
+  y={contextMenu.y}
+  on:action={handleContextMenuAction}
+/>
