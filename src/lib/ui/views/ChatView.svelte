@@ -150,7 +150,12 @@
           </div>
           <FormattedMessage
             content={message.content}
-            messages={chat.messages}
+            messages={chat.messages.map(m => ({
+              messageIdentifier: m.messageIdentifier,
+              content: m.content,
+              identifier: m.identifier,
+              date: m.date.toISOString() // Convert Date to string
+            }))}
           />
         </div>
         {#each extractUrls(message.content) as url}
