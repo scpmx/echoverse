@@ -3,17 +3,18 @@
   import type { AppController } from "$lib/controller.svelte";
   import MessageContentPreview from "../components/MessageContentPreview.svelte";
   import MessageContextMenu from "../components/MessageContextMenu.svelte";
-      
+  import FormattedMessage from "../components/FormattedMessage.svelte";
+
   type Props = {
-    controller: AppController,
-    chat: ChatContext
+    controller: AppController;
+    chat: ChatContext;
   };
 
   let { controller, chat }: Props = $props();
 
   let input = $state("");
   let messageContainer: HTMLDivElement;
-  let contextMenu = $state({ visible: false, x: 0, y: 0, messageId: '' });
+  let contextMenu = $state({ visible: false, x: 0, y: 0, messageId: "" });
 
   function scrollToBottom() {
     if (messageContainer) {
@@ -39,31 +40,54 @@
       visible: true,
       x: event.clientX,
       y: rect.bottom,
-      messageId
+      messageId,
     };
   }
 
   function handleContextMenuAction(event: CustomEvent) {
     const { action } = event.detail;
     const messageId = contextMenu.messageId;
-    
+
     switch (action) {
-      case 'copy':
-        const message = chat.messages.find(m => m.id === messageId);
+      case "copy":
+        const message = chat.messages.find((m) => m.id === messageId);
         if (message) {
           navigator.clipboard.writeText(message.content);
         }
         break;
-      case 'reply':
+      case "reply":
         // Implement reply functionality
-        console.log('Reply to message:', messageId);
+        console.log("Reply to message:", messageId);
         break;
-      case 'delete':
+      case "delete":
         // Implement delete functionality
-        console.log('Delete message:', messageId);
+        console.log("Delete message:", messageId);
         break;
     }
   }
+
+  function quoteMessage(messageId: string) {
+    const message = chat.messages.find((m) => m.id === messageId);
+    if (message) {
+      input += `>>${message.messageIdentifier}\n`;
+      scrollToBottom();
+    }
+  }
+
+  function handleQuoteClick(messageIdentifier: string) {
+    // Implement quote functionality
+    console.log("Quote message:", messageIdentifier);
+  }
+
+  let messageMap = $derived(
+    chat.messages.reduce(
+      (acc, message) => {
+        acc[message.messageIdentifier] = message.content;
+        return acc;
+      },
+      {} as Record<string, string>
+    )
+  );
 </script>
 
 <svelte:head>
@@ -82,38 +106,52 @@
           <span class="font-bold mr-2">{chat.identifier}</span>
           <span class="text-xs opacity-50">{chat.messageIdentifier}</span>
           <span class="mx-2">|</span>
-          <time class="text-xs opacity-50">{new Date(chat.date).toLocaleDateString()} {new Date(chat.date).toLocaleTimeString()}</time>
+          <time class="text-xs opacity-50"
+            >{new Date(chat.date).toLocaleDateString()}
+            {new Date(chat.date).toLocaleTimeString()}</time
+          >
         </div>
         <MessageContentPreview url={chat.imageUrl} />
         <p class="mt-4 whitespace-pre-wrap">{chat.content}</p>
       </div>
-      
+
       <!-- Messages -->
       {#each chat.messages as message}
-        <div class="group flex flex-col p-2 hover:bg-base-200 transition-colors duration-200">
+        <div
+          class="group flex flex-col p-2 hover:bg-base-200 transition-colors duration-200"
+        >
           <div class="flex items-center mb-1">
             <span class="font-bold mr-2 font-mono">{message.identifier}</span>
-            <span class="text-xs opacity-50 font-mono">{message.messageIdentifier}</span>
+            <button
+              class="text-xs opacity-50 font-mono cursor-pointer hover:opacity-100 bg-transparent border-none p-0"
+              onclick={() => quoteMessage(message.id)}
+              >{message.messageIdentifier}</button
+            >
             <span class="mx-2">|</span>
-            <time class="text-xs opacity-50 font-mono">{message.date.toLocaleDateString()} {message.date.toLocaleTimeString()}</time>
-            <button 
+            <time class="text-xs opacity-50 font-mono"
+              >{message.date.toLocaleDateString()}
+              {message.date.toLocaleTimeString()}</time
+            >
+            <button
               class="ml-auto p-1 hover:bg-base-300 rounded invisible group-hover:visible transition-opacity duration-200"
               onclick={(e) => openContextMenu(e, message.id)}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"
+                />
               </svg>
             </button>
           </div>
-          <div class="break-words whitespace-pre-wrap">
-            {#each message.content.split('\n') as line}
-              {#if line.startsWith('>')}
-                <span class="text-green-500">{line}</span><br>
-              {:else}
-                {line}<br>
-              {/if}
-            {/each}
-          </div>
+          <FormattedMessage
+            content={message.content}
+            messages={chat.messages}
+          />
         </div>
         {#each extractUrls(message.content) as url}
           <div class="p-2">
@@ -133,7 +171,7 @@
         class="btn btn-accent m-4"
         onclick={async () => {
           chat.addMessage(input);
-          input = '';
+          input = "";
         }}
       >
         <svg
