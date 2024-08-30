@@ -183,4 +183,20 @@ export class ChatContext {
       })
       .join("");
   }
+
+  get content(): string {
+    return this.chat.content;
+  }
+
+  get identifier(): string {
+    return this.generateIdentifier(this.chat.creator, this.chat.date);
+  }
+
+  get messageIdentifier(): string {
+    return this.generateMessageIdentifier(this.chat.id);
+  }
+
+  get date(): string {
+    return this.chat.date;
+  }
 }

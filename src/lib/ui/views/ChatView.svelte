@@ -43,6 +43,19 @@
 <main class="relative flex-1 overflow-y-auto">
   <div class="flex flex-col h-full">
     <div class="flex-grow overflow-y-scroll" bind:this={messageContainer}>
+      <!-- Chat content and image -->
+      <div class="p-2 bg-base-100">
+        <div class="flex items-center mb-1">
+          <span class="font-bold mr-2">{chat.identifier}</span>
+          <span class="text-xs opacity-50">{chat.messageIdentifier}</span>
+          <span class="mx-2">|</span>
+          <time class="text-xs opacity-50">{new Date(chat.date).toLocaleDateString()} {new Date(chat.date).toLocaleTimeString()}</time>
+        </div>
+        <MessageContentPreview url={chat.imageUrl} />
+        <p class="mt-4 whitespace-pre-wrap">{chat.content}</p>
+      </div>
+      
+      <!-- Messages -->
       {#each chat.messages as message}
         <div class="flex flex-col p-2">
           <div class="flex items-center mb-1">
