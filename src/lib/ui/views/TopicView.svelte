@@ -2,6 +2,7 @@
   import type { AppController } from "$lib/controller.svelte";
   import type { TopicContext } from "$lib/contexts/topic.svelte";
   import NewChatModal from "../components/NewChatModal.svelte";
+  import MessageContentPreview from "../components/MessageContentPreview.svelte";
   
   type Props = {
     controller: AppController,
@@ -25,8 +26,8 @@
   >
     {#each topic.chats as chat}
       <div class="card bg-base-100 shadow-xl">
-        <figure>
-          <img src={chat.imageUrl} alt="Chat" />
+        <figure class="h-48 overflow-hidden">
+          <MessageContentPreview url={chat.imageUrl} />
         </figure>
         <div class="card-body">
           <h2 class="card-title">{chat.title}</h2>
