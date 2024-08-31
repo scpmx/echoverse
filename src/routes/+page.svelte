@@ -7,7 +7,7 @@
   async function init() {
 
     var peer = await Peerbit.create({
-      directory: "./test8"
+      directory: "./test9"
     });
 
     await peer.bootstrap();
