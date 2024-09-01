@@ -49,7 +49,7 @@ export class AppController {
       .filter(t => t != undefined);
 
       for (let i = 0; i < openTopics.length; i++) {
-        var topic = await this.peer.open(openTopics[i])
+        var topic = await this.peer.open(openTopics[i], { args: { replicate: { factor: 1 } }})
         var context = new TopicContext(topic, this.peer.identity.publicKey);
         this.topics.set(topic.ticker, context);
       }
@@ -62,7 +62,7 @@ export class AppController {
 
     if (!chatContext) {
       try {
-        var chat = await this.peer.open<Chat>(address);
+        var chat = await this.peer.open<Chat>(address, { args: { replicate: { factor: 1 } }});
         chatContext = new ChatContext(chat, this.peer.identity.publicKey);
         this.chats.set(chat.address, chatContext);
         
@@ -80,7 +80,7 @@ export class AppController {
 
   async openChat(chat: Chat): Promise<void> {
     try {
-      await this.peer.open(chat);
+      await this.peer.open(chat, { args: { replicate: { factor: 1 } }});
     } catch {
       console.log("chat already opened");
     }
@@ -102,7 +102,7 @@ export class AppController {
   async openTopic(topic: Topic) {
 
     if (topic.closed) {
-      await this.peer.open(topic);
+      await this.peer.open(topic, { args: { replicate: { factor: 1 } }});
     }
 
     var topicContext = this.topics.get(topic.address);
