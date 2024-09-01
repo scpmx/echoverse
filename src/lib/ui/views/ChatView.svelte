@@ -4,6 +4,7 @@
   import MessageContentPreview from "../components/MessageContentPreview.svelte";
   import MessageContextMenu from "../components/MessageContextMenu.svelte";
   import FormattedMessage from "../components/FormattedMessage.svelte";
+  import ChatHandle from "../components/ChatHandle.svelte";
 
   type Props = {
     controller: AppController;
@@ -103,7 +104,7 @@
       <!-- Chat content and image -->
       <div class="p-2 bg-base-100">
         <div class="flex items-center mb-1">
-          <span class="font-bold mr-2">{chat.identifier}</span>
+          <ChatHandle handle={chat.identifier} />
           <span class="text-xs opacity-50">{chat.messageIdentifier}</span>
           <span class="mx-2">|</span>
           <time class="text-xs opacity-50"
@@ -121,7 +122,7 @@
           class="group flex flex-col p-2 hover:bg-base-200 transition-colors duration-200"
         >
           <div class="flex items-center mb-1">
-            <span class="font-bold mr-2 font-mono">{message.identifier}</span>
+            <ChatHandle handle={message.identifier} />
             <button
               class="text-xs opacity-50 font-mono cursor-pointer hover:opacity-100 bg-transparent border-none p-0"
               onclick={() => quoteMessage(message.id)}
